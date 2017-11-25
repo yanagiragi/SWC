@@ -7,6 +7,8 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     [ReorderableList]
     public List<int> PlayerItemList = new List<int>();
 
+    public float health = 100;
+
     public GameObject playerInstance;
     public bool isIdle = true;
     private bool isDrop = false;
@@ -21,18 +23,11 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     {
         StepManager.step += PlayerManager.UpdateAtStep;
 
-        // enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
-        /*PlayerItemList.Add(Item.ItemType.empty, 0);
-        PlayerItemList.Add(Item.ItemType.milk, 0);
-        PlayerItemList.Add(Item.ItemType.oil, 0);
-        PlayerItemList.Add(Item.ItemType.butter, 0);
-        PlayerItemList.Add(Item.ItemType.acid, 0);
-        PlayerItemList.Add(Item.ItemType.yogurt, 0);
-        PlayerItemList.Add(Item.ItemType.poison, 0);
-        PlayerItemList.Add(Item.ItemType.food1, 0);
-        PlayerItemList.Add(Item.ItemType.food2, 0);
-        PlayerItemList.Add(Item.ItemType.food3, 0);*/
+        health = 100;
 
+        // enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
+
+        // Init PlayerItemList
         for (int i = 0; i < 10; ++i)
         {
             PlayerItemList.Add(0);
@@ -42,6 +37,12 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     // Called Every Frame
     private void Update()
     {
+        if (health <= 0)
+        {
+            ; // Preform Death Action
+            return;
+        }
+
         bool isInteracted = CheckDropItemAction();
         if (isInteracted)
         {
@@ -55,6 +56,22 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         {
                 isEat = false;
                 GetNextStepTranslate();
+        }
+        
+    }
+
+    public static void IncreaseHealth(float amount)
+    {
+        if(instance.health < 100)
+        {
+            instance.health += amount;
+        }
+    }
+
+    public static void DecreaseHealth(float amount)
+    {
+        if(instance.health > amount) { 
+            instance.health += amount;
         }
     }
 
