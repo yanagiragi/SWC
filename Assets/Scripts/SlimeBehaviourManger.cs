@@ -18,6 +18,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     int AbilityCoolDown = 0;
     bool isCoolDowm;
     [SerializeField] int CoolDownTime;
+    Vector3 playerPosition;
     //DungeonMapData dungeonMapData;
 
     void Awake()
@@ -44,6 +45,11 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
             AbilityCoolDown -= 1; 
         }
         Debug.Log(DungeonManager.GetMapData(PlayerManager.instance.playerInstance.transform.position).cubeType);
+    }
+
+    public void UpdatePlayerPosition(Vector3 PlayerPosition)
+    {
+        playerPosition = PlayerPosition;
     }
 
     void DoBehaviourEffect()
