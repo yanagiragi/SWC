@@ -45,6 +45,12 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		instance.isIdle = true;
 	}
 
+    public void putYogurt()
+    {
+        yogurtInstance.transform.position = playerInstance.transform.position;
+        yogurtCount = 0;
+    }
+
     // Called Every Frame
     private void Update()
     {
@@ -309,9 +315,10 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 			playerInstance.GetComponent<Animator>().Play("Armature|jump", -1, 0);
 
 			Vector3 _nextPos = instance.destination + instance.nextPosition;
+            bool isConflictWithYogurt = (yogurtInstance.transform.position.x != -1 && (yogurtInstance.transform.position - _nextPos).magnitude < 0.01f);
 			DungeonMapData _data = DungeonManager.GetMapData ((int)_nextPos.x, (int)_nextPos.z);
 
-			if (_data.cubeData.canThrough) {
+			if (_data.cubeData.canThrough && !isConflictWithYogurt) {
 				if ((_data.itemData.canFuse) && (slimeMode != Item.ItemType.empty)) {
 					Item.ItemType resultType = CheckFuse (slimeMode, _data.itemType);
 					if ((int)resultType > (int)Item.ItemType.poison) {

@@ -33,7 +33,9 @@ public class YanagiTest : MonoBehaviour {
             Debug.Log(PlayerManager.instance.DeFuse(Item.ItemType.yogurt, Item.ItemType.milk));
             Debug.Log(PlayerManager.instance.PlayerItemList[(int)Item.ItemType.milk]);
             Debug.Log(PlayerManager.instance.PlayerItemList[(int)Item.ItemType.acid]);*/
-            EnemyBehavior.instance.Dead(EnemyBehavior.instance.enemyList[0]);
+            //EnemyBehavior.instance.Dead(EnemyBehavior.instance.enemyList[0]);
+
+            PlayerManager.instance.putYogurt();
         }
 
         //player.GetComponent<PlayerManager>().Walk();
