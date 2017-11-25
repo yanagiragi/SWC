@@ -28,7 +28,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
 
         for (int i = 0; i < 1; i++)
         {
-            GameObject m = Instantiate(monster, GetEmptyPos(), transform.rotation);
+            GameObject m = Instantiate(monsterBasePrefab, GetEmptyPos(), transform.rotation);
             enemyList.Add(new Enemy(m, 0));
         }
     }
