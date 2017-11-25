@@ -10,7 +10,9 @@ public class UIManger : ManagerBase<UIManger>
     [SerializeField] Image bloodBar;
     [SerializeField] Image satiationBar;
     [SerializeField] Text FoodInfo;
-    [SerializeField] Image ThrowUI;
+	[SerializeField] Image ThrowUI;
+	[SerializeField] Image ThrowImage1;
+	[SerializeField] Image ThrowImage2;
     [SerializeField] Image CoolDown;
     [SerializeField] Image HurtEffect;
     static public bool isThrowUIOpen = false;
@@ -18,18 +20,20 @@ public class UIManger : ManagerBase<UIManger>
     void Update()
 	{
         UpdateAtStep();
-        if(!isThrowUIOpen)
-        {
-            PlayerManager.instance.isIdle = true;
-        }
-		/*if(Input.GetKeyDown(KeyCode.C))
-		{
-            OpenThrowUI();
-        }
-        if(Input.GetKeyUp(KeyCode.C))
-		{
-            OpenThrowUI();
-        }*/
+//        if(!isThrowUIOpen)
+//        {
+//            PlayerManager.instance.isIdle = true;
+//        }
+
+//		if (isThrowUIOpen) {
+//			if(Input.GetKeyDown(KeyCode.A)){
+//				
+//	        }
+//
+//			if(Input.GetKeyDown(KeyCode.D)){
+//				
+//	        }
+//		}
 	}
     void UpdateAtStep()
     {
@@ -76,14 +80,19 @@ public class UIManger : ManagerBase<UIManger>
 
 	public void OpenThrowUI()
 	{
-        if (!isThrowUIOpen)
-        {
-            ThrowUI.gameObject.SetActive(true);
-            ThrowUI.gameObject.GetComponent<Animator>().SetTrigger("OpenThrowUI");
-            isThrowUIOpen = true;
-        }
-		else
-		{
+		if (!isThrowUIOpen) {
+			ThrowUI.gameObject.SetActive (true);
+			Item _item1 =  ItemManager.GetItemData (PlayerManager.instance.subMode1);
+			Item _item2 =  ItemManager.GetItemData (PlayerManager.instance.subMode2);
+			ThrowImage1.sprite = _item1.icon;
+			ThrowImage2.sprite = _item2.icon;
+			ThrowUI.gameObject.GetComponent<Animator> ().SetTrigger ("OpenThrowUI");
+			isThrowUIOpen = true;
+		}
+	}
+	public void CloseThrowUI()
+	{
+		if (isThrowUIOpen) {
 			isThrowUIOpen = false;
             ThrowUI.gameObject.GetComponent<Animator>().SetTrigger("CloseThrowUI");
 		}
