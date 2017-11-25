@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnermyManager : ManagerBase<EnermyManager> 
+public class EnemyManager : ManagerBase<EnemyManager>
 {
     public GameObject monster;
     public GameObject sulimo;
-    public int mindist = 5;
+    public int mindist = 1;
     public float move = 1;
+    public Animator attack;//怪物攻擊動畫
+    private int monsterHP;
 
 
     void Update()//怪物面向史萊姆 離開一定距離(mindist)去追蹤目標物件
@@ -25,5 +27,10 @@ public class EnermyManager : ManagerBase<EnermyManager>
 
 
         }
+        else
+        {
+            attack.Play(1);
+        }
     }
+
 }
