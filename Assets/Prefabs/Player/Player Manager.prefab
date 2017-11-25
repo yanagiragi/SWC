@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4252198199120828}
-  - component: {fileID: 114611796092227682}
+  - component: {fileID: 114026771939721318}
   m_Layer: 0
   m_Name: Player Manager
   m_TagString: Untagged
@@ -40,7 +40,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114611796092227682
+--- !u!114 &114026771939721318
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -53,7 +53,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SetAsInstanceBut: SetAsInstance
   PlayerItemList: 
+  MaterialMap:
+  - {fileID: 2100000, guid: d48186851887c5a468a9dad7548691cb, type: 2}
+  - {fileID: 2100000, guid: 638f47b009201714884a8c095995553d, type: 2}
+  - {fileID: 2100000, guid: d82c7fde2a688e94593624747c4e2d30, type: 2}
+  - {fileID: 2100000, guid: d61cb29da53ca7a41985b8f05763480e, type: 2}
+  - {fileID: 2100000, guid: 2b9c6fb22cdb38248a2516ca268cb1bc, type: 2}
+  - {fileID: 2100000, guid: 5ddcbb1cc84faf1458f8a89c16ed2e78, type: 2}
+  - {fileID: 2100000, guid: a5e11da8310a6304ab40eca5011d3742, type: 2}
+  - {fileID: 2100000, guid: d48186851887c5a468a9dad7548691cb, type: 2}
+  - {fileID: 2100000, guid: d48186851887c5a468a9dad7548691cb, type: 2}
+  - {fileID: 2100000, guid: d48186851887c5a468a9dad7548691cb, type: 2}
   health: 100
+  food: 0
+  satiation: 1000
+  moveSpeed: 5
+  slimeMode: 0
   playerInstance: {fileID: 0}
   yogurtInstance: {fileID: 0}
   isIdle: 1

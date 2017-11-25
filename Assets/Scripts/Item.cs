@@ -17,7 +17,11 @@ public class Item
 	public GameObject objPrefab;
 	/// <summary> 出現率 </summary>
 	public float rate;
-    
+	/// <summary> Ui 縮圖 </summary>
+	public Sprite icon;
+	/// <summary> 增加飽食 </summary>
+	public float satiation;
+
     public Item(ItemType type, bool canFuse, bool canDrop)
     {
         this.type = type;

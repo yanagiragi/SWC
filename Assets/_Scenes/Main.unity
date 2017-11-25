@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -230,41 +230,6 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 756958061}
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
---- !u!1 &421152515 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1621327032412568, guid: 656f2bf6fbb441d449223af5790660bd,
-    type: 2}
-  m_PrefabInternal: {fileID: 2035688432}
---- !u!114 &421152516
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 421152515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ed2cee839cc2204db5caf2457ab33ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SetAsInstanceBut: SetAsInstance
-  PlayerItemList: 
-  MaterialMap:
-  - {fileID: 2100000, guid: d48186851887c5a468a9dad7548691cb, type: 2}
-  - {fileID: 2100000, guid: 638f47b009201714884a8c095995553d, type: 2}
-  - {fileID: 2100000, guid: d82c7fde2a688e94593624747c4e2d30, type: 2}
-  - {fileID: 2100000, guid: d61cb29da53ca7a41985b8f05763480e, type: 2}
-  - {fileID: 2100000, guid: 2b9c6fb22cdb38248a2516ca268cb1bc, type: 2}
-  - {fileID: 2100000, guid: 5ddcbb1cc84faf1458f8a89c16ed2e78, type: 2}
-  - {fileID: 2100000, guid: a5e11da8310a6304ab40eca5011d3742, type: 2}
-  - {fileID: 2100000, guid: d48186851887c5a468a9dad7548691cb, type: 2}
-  - {fileID: 2100000, guid: d48186851887c5a468a9dad7548691cb, type: 2}
-  - {fileID: 2100000, guid: d48186851887c5a468a9dad7548691cb, type: 2}
-  health: 100
-  moveSpeed: 5
-  slimeMode: 0
-  playerInstance: {fileID: 920482834}
-  yogurtInstance: {fileID: 2144297331}
-  isIdle: 1
 --- !u!1 &447869580
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,12 +391,12 @@ Prefab:
     - target: {fileID: 224866131860028638, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 960
+      value: 314
       objectReference: {fileID: 0}
     - target: {fileID: 224866131860028638, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 540
+      value: 176.5
       objectReference: {fileID: 0}
     - target: {fileID: 224866131860028638, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
@@ -516,42 +481,42 @@ Prefab:
     - target: {fileID: 224249025065624284, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: -545.0001
+      value: -544.9999
       objectReference: {fileID: 0}
     - target: {fileID: 224249025065624284, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1318.8423
+      value: 2030.7217
       objectReference: {fileID: 0}
     - target: {fileID: 224056117606060778, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: -610.0001
+      value: -609.9999
       objectReference: {fileID: 0}
     - target: {fileID: 224056117606060778, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1238.8423
+      value: -1950.7217
       objectReference: {fileID: 0}
     - target: {fileID: 224980693994315442, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 840.0001
+      value: 839.9999
       objectReference: {fileID: 0}
     - target: {fileID: 224980693994315442, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1368.8423
+      value: 2080.7217
       objectReference: {fileID: 0}
     - target: {fileID: 224694149749713532, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: -510.00012
+      value: -509.99988
       objectReference: {fileID: 0}
     - target: {fileID: 224694149749713532, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1388.8423
+      value: -2100.7217
       objectReference: {fileID: 0}
     - target: {fileID: 224690849502519660, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
@@ -591,11 +556,17 @@ Prefab:
     - target: {fileID: 224321772221563448, guid: 4c704e4bac0626d439d60fcd5ab13d87,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 5.260002
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4c704e4bac0626d439d60fcd5ab13d87, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &756958062 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114443656688667082, guid: 4c704e4bac0626d439d60fcd5ab13d87,
+    type: 2}
+  m_PrefabInternal: {fileID: 756958061}
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
 --- !u!1001 &870610869
 Prefab:
   m_ObjectHideFlags: 0
@@ -976,8 +947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SetAsInstanceBut: SetAsInstance
-  Satiation: 0
-  FoodAmount: 0
+  slimeModeImage: {fileID: 756958062}
   bloodBar: {fileID: 1104914229}
   satiationBar: {fileID: 1228617106}
   FoodInfo: {fileID: 239142825}
@@ -1074,18 +1044,17 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114611796092227682, guid: 656f2bf6fbb441d449223af5790660bd,
+    - target: {fileID: 114026771939721318, guid: 656f2bf6fbb441d449223af5790660bd,
         type: 2}
       propertyPath: playerInstance
       value: 
       objectReference: {fileID: 920482834}
-    - target: {fileID: 114611796092227682, guid: 656f2bf6fbb441d449223af5790660bd,
+    - target: {fileID: 114026771939721318, guid: 656f2bf6fbb441d449223af5790660bd,
         type: 2}
       propertyPath: yogurtInstance
       value: 
       objectReference: {fileID: 2144297331}
-    m_RemovedComponents:
-    - {fileID: 114611796092227682, guid: 656f2bf6fbb441d449223af5790660bd, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 656f2bf6fbb441d449223af5790660bd, type: 2}
   m_IsPrefabParent: 0
 --- !u!4 &2035688433 stripped

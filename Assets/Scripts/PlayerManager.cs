@@ -10,7 +10,9 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     [ReorderableList]
     public List<Material> MaterialMap = new List<Material>();
 
-    public float health = 100;
+	public float health = 100;
+	public float food = 0;
+	public float satiation = 1000;
 
 	public float moveSpeed = 1;
 	[LockInInspector]public Item.ItemType slimeMode = Item.ItemType.empty;
@@ -43,6 +45,12 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		instance.destination = new Vector3 (DungeonManager.homePos.x, 0, DungeonManager.homePos.y);
 		instance.playerInstance.transform.position = instance.destination;
 		instance.isIdle = true;
+
+		instance.SetSlimeMode (Item.ItemType.empty);
+
+		UIManger.instance.UpdateBloodBar ();
+		UIManger.instance.UpdateFoodInfo ();
+		UIManger.instance.UpdateSatiation ();
 	}
 
     public void putYogurt()
@@ -89,20 +97,47 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         yogurtInstance.transform.position = Vector3.right * -1f;
     }
 
+	public static void SetHealth(float p_health)
+	{
+		instance.health = p_health;
+		UIManger.instance.UpdateBloodBar ();
+	}
+
     public static void IncreaseHealth(float amount)
     {
-        if(instance.health < 100)
-        {
-            instance.health += amount;
-        }
+		instance.health = Mathf.Min(instance.health + amount, 100);
+		UIManger.instance.UpdateBloodBar ();
     }
 
     public static void DecreaseHealth(float amount)
     {
-        if(instance.health > amount) { 
-            instance.health -= amount;
-        }
+		instance.health = Mathf.Max(instance.health - amount, 0);
+		UIManger.instance.UpdateBloodBar ();
     }
+
+	public static void SetFood(float p_food)
+	{
+		instance.food = p_food;
+		UIManger.instance.UpdateFoodInfo ();
+	}
+
+	public static void IncreaseFood(float amount)
+	{
+		instance.food = Mathf.Max(instance.food + amount, 0);
+		UIManger.instance.UpdateFoodInfo ();
+	}
+
+	public static void SetSatiation(float p_satiation)
+	{
+		instance.satiation = p_satiation;
+		UIManger.instance.UpdateSatiation ();
+	}
+
+	public static void IncreaseSatiation(float amount)
+	{
+		instance.satiation = Mathf.Clamp(instance.satiation + amount, 0, 1000);
+		UIManger.instance.UpdateSatiation ();
+	}
 
     public bool CheckDropItemAction()
     {
@@ -129,6 +164,8 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         Material ReplaceMat = MaterialMap[(int) itemType];
 
         playerInstance.GetComponentInChildren<SkinnedMeshRenderer>().material = ReplaceMat;
+
+		UIManger.instance.UpdateSlimeMode ();
 	}
 
 	public Item.ItemType CheckFuse(Item.ItemType itemType1, Item.ItemType itemType2)
@@ -226,6 +263,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
         instance.Move();
         instance.Rotate();
+
     }
 
     public void Move()
@@ -253,11 +291,18 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		DungeonMapData _data = DungeonManager.GetMapData ((int)destination.x, (int)destination.z);
 
 		if ((_data.itemType != Item.ItemType.empty)) {
-			AddItem (_data);
+			AddItem (_data.itemData);
 			DungeonManager.ChangeItemType ((int)destination.x, (int)destination.z, Item.ItemType.empty);
 		}
 
 		islerping = false;
+		if (_data.cubeType == E_DUNGEON_CUBE_TYPE.HOME) {
+			IncreaseSatiation (instance.food);
+			SetFood (0);
+
+		} else {
+			IncreaseSatiation (-1f);
+		}
 //		Fuse (slimeMode, _data.itemType);
     }
 
@@ -336,15 +381,16 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         }
     }
 
-	bool AddItem(DungeonMapData addItem)
+	bool AddItem(Item addItem)
     {
-		Debug.Log ("AddItem : " + addItem.itemType.ToString());
+		Debug.Log ("AddItem : " + addItem.type.ToString());
         bool result = false;
-		Item.ItemType _itemType = addItem.itemType;
+		Item.ItemType _itemType = addItem.type;
 		if (_itemType == Item.ItemType.food1 || _itemType == Item.ItemType.food2 || _itemType == Item.ItemType.food3)
         {
 			++PlayerItemList[(int)_itemType];
             result = true;
+			IncreaseFood (addItem.satiation);
         }
         else
         {

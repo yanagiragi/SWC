@@ -23,5 +23,4 @@ public class DungeonCubeData{
 	public float rate;
 	/// <summary> 可以通過 </summary>
 	public bool canThrough;
-
 }

@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class UIManger : ManagerBase<UIManger>
 {
-    [SerializeField] int Satiation;
-    [SerializeField] int FoodAmount;
+	[SerializeField] Image slimeModeImage;
     [SerializeField] Image bloodBar;
     [SerializeField] Image satiationBar;
     [SerializeField] Text FoodInfo;
@@ -33,24 +32,33 @@ public class UIManger : ManagerBase<UIManger>
 	}
     void UpdateAtStep()
     {
-        UpdateBloodBar();
-        UpdateSatiation();
-        UpdateFoodInfo();
+//        UpdateBloodBar();
+//        UpdateSatiation();
+//        UpdateFoodInfo();
     }
+
+	public void UpdateSlimeMode()
+	{
+		Item _item = ItemManager.GetItemData(PlayerManager.instance.slimeMode);
+		slimeModeImage.sprite = _item.icon;
+	}
 
     public void UpdateBloodBar()
     {
+		Debug.Log ("UpdateBloodBar : " + PlayerManager.instance.satiation);
         bloodBar.fillAmount = PlayerManager.instance.health / 100.0f;
     }
 
 	public void UpdateSatiation()
 	{
-        satiationBar.fillAmount = Satiation / 100.0f;
+		Debug.Log ("UpdateSatiation : " + PlayerManager.instance.satiation);
+		satiationBar.fillAmount = PlayerManager.instance.satiation / 1000.0f;
     }
 
 	public void UpdateFoodInfo()
 	{
-        FoodInfo.text = "食物數量 : " + FoodAmount;
+		Debug.Log ("UpdateFoodInfo : " + PlayerManager.instance.satiation);
+		FoodInfo.text = "食物數量 : " + PlayerManager.instance.food;
     }
 
 	public void OpenThrowUI()
