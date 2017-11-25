@@ -5,90 +5,137 @@ using UnityEngine;
 
 public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 {
-    /*測試用變數 */
-    [SerializeField] int currentGird_x;
-    [SerializeField] int currentGird_y;
-    [SerializeField] int PlayerBlood;
-    /* */
-
     [SerializeField] Item.ItemType currentBehaviourType;
     [SerializeField] GameObject bait;
 
     [SerializeField] int BloodIncrease;
-    int AbilityCoolDown = 0;
+    static public int AbilityCoolDown = 0;
     bool isCoolDowm;
+    public static bool HaveCoolDown = false;
     [SerializeField] int CoolDownTime;
-    Vector3 playerPosition;
-    //DungeonMapData dungeonMapData;
+    [SerializeField] int WaterDamage;
+    [SerializeField] GameObject Yogurt;
+    Vector2 playerPosition;
 
     void Awake()
     {
     }
 
+
     void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            UpdateAtStep();
+            //currentBehaviourType();
+            if (AbilityCoolDown > 1 && HaveCoolDown)
+            {
+                AbilityCoolDown -= 1;
+                isCoolDowm = true;
+            }
+            DoBehaviourEffect();
+            if (AbilityCoolDown == 0 && HaveCoolDown)
+            {
+                isCoolDowm = false;
+                AbilityCoolDown = CoolDownTime;
+            }
+
+            Debug.Log(DungeonManager.GetMapData(playerPosition).pos);
         }
     }
 
-    void UpdateAtStep()
+    /* Item.ItemType currentBehaviourType()
     {
-        if (AbilityCoolDown == 0)
+        if (PlayerManager.instance.PlayerItemList.Contains(1))
         {
-            DoBehaviourEffect();
-            AbilityCoolDown = CoolDownTime;
+            HaveCoolDown = true;
+            return Item.ItemType.milk;
+        }
+        else if (PlayerManager.instance.PlayerItemList.Contains(2))
+        {
+            HaveCoolDown = false;
+            return Item.ItemType.oil;
+        }
+        else if (PlayerManager.instance.PlayerItemList.Contains(3))
+        {
+            HaveCoolDown = true;
+            return Item.ItemType.butter;
+        }
+        else if (PlayerManager.instance.PlayerItemList.Contains(4))
+        {
+            HaveCoolDown = true;
+            return Item.ItemType.acid;
+        }
+        else if (PlayerManager.instance.PlayerItemList.Contains(5))
+        {
+            HaveCoolDown = true;
+            return Item.ItemType.yogurt;
+        }
+        else if (PlayerManager.instance.PlayerItemList.Contains(6))
+        {
+            HaveCoolDown = true;
+            return Item.ItemType.poison;
         }
         else
         {
-            AbilityCoolDown -= 1; 
+            HaveCoolDown = false;
+            return Item.ItemType.empty;
         }
-        Debug.Log(DungeonManager.GetMapData(PlayerManager.instance.playerInstance.transform.position).cubeType);
-    }
+    } */
 
-    public void UpdatePlayerPosition(Vector3 PlayerPosition)
+    public void UpdatePlayerPosition(Vector3 playerPositionGet)
     {
-        playerPosition = PlayerPosition;
+        playerPosition = new Vector2(Mathf.Round(playerPositionGet.x), Mathf.Round(playerPositionGet.z));
     }
 
     void DoBehaviourEffect()
     {
-        
+
         switch (currentBehaviourType)
         {
             case Item.ItemType.milk:
+                HaveCoolDown = true;
                 MilkIncreaseBlood();
                 break;
             case Item.ItemType.acid:
+                HaveCoolDown = true;
                 AcidMeltWall();
                 break;
             case Item.ItemType.oil:
+                HaveCoolDown = false;
                 WalkOnWater();
                 break;
             case Item.ItemType.butter:
-                CrossWall();
+                HaveCoolDown = true;
+                if (!isCoolDowm)
+                    CrossWall();
                 break;
             case Item.ItemType.poison:
-                PoisonKill();
+                HaveCoolDown = true;
+                if (!isCoolDowm)
+                    PoisonKill();
                 break;
             case Item.ItemType.yogurt:
-
+                HaveCoolDown = true;
+                PutYogurt();
                 break;
         }
     }
 
     void MilkIncreaseBlood()
     {
-        PlayerBlood += BloodIncrease;
+        PlayerManager.IncreaseHealth(BloodIncrease);
     }
 
     public void AcidMeltWall()
     {
         DungeonMapData dungeonMapData = DungeonManager.GetMapData(playerPosition);
-        if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.LEN)
+        Debug.Log(dungeonMapData.cubeType);
+        if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.EARTH)
         {
-            Debug.Log("牆被融化");
+            Debug.Log("AcidMeltWall");
+            DungeonManager.ChangeCubeType(playerPosition, E_DUNGEON_CUBE_TYPE.NONE);
+
         }
     }
 
@@ -97,62 +144,68 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         DungeonMapData dungeonMapData = DungeonManager.GetMapData(playerPosition);
         if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.WATER)
         {
-            Debug.Log("可以走過水");
+            if (currentBehaviourType != Item.ItemType.butter)
+            {
+                PlayerManager.DecreaseHealth(WaterDamage);
+                Debug.Log(PlayerManager.instance.health);
+            }
         }
     }
 
     void CrossWall()
     {
-        Vector2 PlayerPositionV2 = new Vector2(playerPosition.x, playerPosition.y);
         try
         {
-            if (DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(1,1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(1,1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            if (DungeonManager.GetMapData(playerPosition + new Vector2(1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
+            DungeonManager.GetMapData(playerPosition + new Vector2(1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
             {
-                Debug.Log("玩家移動");
+                PlayerManager.instance.playerInstance.transform.position = playerPosition + new Vector2(1, 1);
                 return;
             }
         }
-        catch{}
+        catch { }
         try
         {
-            if (DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(-1,1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(-1,1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            if (DungeonManager.GetMapData(playerPosition + new Vector2(-1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
+            DungeonManager.GetMapData(playerPosition + new Vector2(-1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
             {
-                Debug.Log("玩家移動");
+                PlayerManager.instance.playerInstance.transform.position = playerPosition + new Vector2(-1, 1);
                 return;
             }
         }
-        catch{}
+        catch { }
         try
         {
-            if (DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(1,-1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(1,-1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            if (DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
+            DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
             {
-                Debug.Log("玩家移動");
+                PlayerManager.instance.playerInstance.transform.position = playerPosition + new Vector2(1, -1);
                 return;
             }
         }
-        catch{}
+        catch { }
         try
         {
-            if (DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(-1,-1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(-1,-1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            if (DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
+            DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
             {
-                Debug.Log("玩家移動");
+                PlayerManager.instance.playerInstance.transform.position = playerPosition + new Vector2(-1, -1);
                 return;
             }
         }
-        catch{}
+        catch { }
     }
 
     void PoisonKill()
     {
         
+
     }
 
-    void PutBait()
+    void PutYogurt()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            
-        }
+        GameObject clone = Instantiate(Yogurt, PlayerManager.instance.playerInstance.transform.position, PlayerManager.instance.playerInstance.transform.rotation);
+        PlayerManager.instance.yogurtInstance = clone;
     }
 
 }

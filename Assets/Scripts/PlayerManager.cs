@@ -72,7 +72,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     public static void DecreaseHealth(float amount)
     {
         if(instance.health > amount) { 
-            instance.health += amount;
+            instance.health -= amount;
         }
     }
 
