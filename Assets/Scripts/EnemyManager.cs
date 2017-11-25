@@ -2,50 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyManager : ManagerBase<EnemyManager>
+[System.Serializable]
+public class Enemy
 {
     public GameObject monster;
-    public int i,j=1;
-
-  
-
-    void Start()
+    public int EatYogurtCount = 0;
+    
+    public Enemy(GameObject mon, int yogurtCount)
     {
-        
-        for (i = 0; i<=30; i++)
-            {
-                Instantiate(monster, GetEmptyPos(), transform.rotation);
-
-
-
-
-
-
-
-            }
+        monster = mon;
+        EatYogurtCount = yogurtCount;
     }
-
-
-	Vector3 GetEmptyPos()
-	{   
-
-		for(j=1;j<30;j++)
-		{
-			float x = Mathf.Floor(Random.value*DungeonManager.mapSize.x);
-			float y = Mathf.Floor(Random.value*DungeonManager.mapSize.y);
-
-
-			Vector2 _pos = new Vector2(x,y);
-			DungeonMapData _data = DungeonManager.GetMapData(_pos);
-			E_DUNGEON_CUBE_TYPE _type = _data.cubeType;
-			if( _type == E_DUNGEON_CUBE_TYPE.NONE )
-			{
-
-				return new Vector3(_pos.x, 0.5f, _pos.y);
-			
-			}
-
-		}
-		return Vector3.zero;
-	}
 }
