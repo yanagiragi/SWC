@@ -23,6 +23,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     private int yogurtCount = 0;
     private Vector3 lastFramePos;
+    private Enemy LoserEnemy;
 
     private Vector3 nextPosition;
     private Vector3 rotationAngles;
@@ -281,7 +282,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     public int checkConflict()
     {
         int isConflict = 0;
-
+        
         foreach (Enemy enemy in EnemyBehavior.instance.enemyList)
         {
             float distance = (destination - enemy.monster.transform.position).magnitude;
@@ -289,13 +290,20 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             if (distance < 0.01f)
             {
                 isConflict = 1;
+                LoserEnemy = enemy;
                 break; // lazy check
             }
             if(distance2 < 0.01f)
             {
                 isConflict = 2;
+                LoserEnemy = enemy;
                 break;// lazy check
             }
+        }
+
+        if (slimeMode == Item.ItemType.poison)
+        {
+            isConflict += 3;
         }
 
         return isConflict;
@@ -318,9 +326,14 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             DecreaseHealth(MonsterMinusHealth);
             StartCoroutine(LerpPosition());
         }
-        else
+        else if(condition == 0 || condition == 3)
         {
             StartCoroutine(LerpPosition());
+        }
+        else // Posion 的狀況
+        {
+            EnemyBehavior.instance.Dead(LoserEnemy);
+            destination = playerInstance.transform.position;
         }
     }
 

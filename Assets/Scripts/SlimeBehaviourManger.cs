@@ -103,7 +103,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                 //AcidMeltWall();
                 break;
             case Item.ItemType.oil:
-                WalkOnWater();
+                //WalkOnWater();
                 break;
             case Item.ItemType.poison:
                 if (!isCoolDowm)
@@ -113,9 +113,6 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                 //PutYogurt();
                 break;
         }
-
-
-
     }
 
     void MilkIncreaseBlood()
@@ -153,6 +150,10 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     public void WalkOnWater()
     {
         //DungeonMapData dungeonMapData = DungeonManager.GetMapData(playerPosition);
+        if(nextStepData == null)
+        {
+            ;
+        }
         if (nextStepData.cubeType == E_DUNGEON_CUBE_TYPE.WATER)
         {
             if (currentBehaviourType != Item.ItemType.oil)
