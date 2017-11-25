@@ -79,10 +79,38 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
     void Move(Enemy e, int incrementX, int incrementZ)
     {
         //bool result = checkConflictWithPlayer(e, e.monster.transform.position + new Vector3(incrementX, 0, incrementZ));
-
+        
         // Even if conflict with player, still got priority to move to position
         e.monster.transform.position += new Vector3(incrementX, 0, incrementZ);
-        
+
+        Vector3 angles = Vector3.up;
+
+        if (incrementX != 0)
+        {
+            if(incrementX > 0)
+            {
+                angles = Vector3.up;
+            }
+            else
+            {
+                angles = Vector3.down;
+            }
+        }
+        else
+        {
+            if(incrementZ > 0)
+            {
+                angles = Vector3.zero;
+            }
+            else
+            {
+                angles = Vector3.down * 2;
+            }
+        }
+
+        e.monster.transform.localEulerAngles = angles * 90f;
+
+        e.monster.GetComponent<Animator>().Play("metarig|walk", -1, 0);
     }
 
     Vector2 WalkDefault(Vector3 position)
