@@ -16,7 +16,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
 
     private void Awake()
     {
-        StepManager.step += EnemyBehavior.instance.UpdateAtStep;
+        //StepManager.step += EnemyBehavior.instance.UpdateAtStep;
 
         for (int i = 0; i < 4; ++i)
         {
@@ -54,9 +54,35 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
         return Vector3.zero;
     }
 
-    void Move(GameObject g, int incrementX, int incrementZ)
+    /*void preformConflictPostProcess(Enemy e)
     {
-        g.transform.position += new Vector3(incrementX, 0, incrementZ);
+        // e.monster.GetComponent<Animator>().Play("Attack");
+        Debug.Log("Hit");
+        // Do SomeThing
+    }
+
+    bool checkConflictWithPlayer(Enemy e, Vector3 enemyPos)
+    {
+        bool result = false;
+
+        float distance = (enemyPos - PlayerManager.instance.playerInstance.transform.position).magnitude;
+
+        if(distance < 0.01)
+        {
+            result = true;
+            preformConflictPostProcess(e);
+        }
+
+        return result;
+    }*/
+
+    void Move(Enemy e, int incrementX, int incrementZ)
+    {
+        //bool result = checkConflictWithPlayer(e, e.monster.transform.position + new Vector3(incrementX, 0, incrementZ));
+
+        // Even if conflict with player, still got priority to move to position
+        e.monster.transform.position += new Vector3(incrementX, 0, incrementZ);
+        
     }
 
     Vector2 WalkDefault(Vector3 position)
@@ -224,7 +250,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             }
 
             //Debug.Log(System.String.Format("({0},{1})", x, z));
-            Move(enemy.monster, x, z);
+            Move(enemy, x, z);
         }
     }
     
