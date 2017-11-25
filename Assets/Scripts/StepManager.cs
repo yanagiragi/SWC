@@ -20,7 +20,8 @@ public class StepManager : ManagerBase<StepManager> {
 
     public static void UpdateStep()
     {
-        // Update All Managers
-        //PlayerManager.UpdateAtStep();
+        // Orders are important
+        EnemyBehavior.instance.UpdateAtStep();
+        PlayerManager.UpdateAtStep();
     }
 }

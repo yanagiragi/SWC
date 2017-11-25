@@ -12,9 +12,11 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
     [ReorderableList]
     public List<int> randomIndex = new List<int>();
 
+    public int EnemyAmount;
+
     private void Awake()
     {
-        StepManager.step += EnemyBehavior.instance.UpdateAtStep;
+        //StepManager.step += EnemyBehavior.instance.UpdateAtStep;
 
         for (int i = 0; i < 4; ++i)
         {
@@ -26,17 +28,17 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
     {
         enemyList.Clear();
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < EnemyAmount; i++)
         {
             GameObject m = Instantiate(monsterBasePrefab, GetEmptyPos(), transform.rotation);
-            enemyList.Add(new Enemy(m, 0));
+            enemyList.Add(new Enemy(m));
         }
     }
 
     Vector3 GetEmptyPos()
     {
         // Try 30 times, may need refactor
-        for (int j = 1; j < 30; j++)
+        for (;;)
         {
             float x = Mathf.Floor(UnityEngine.Random.value * DungeonManager.mapSize.x);
             float y = Mathf.Floor(UnityEngine.Random.value * DungeonManager.mapSize.y);
@@ -46,15 +48,69 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             E_DUNGEON_CUBE_TYPE _type = _data.cubeType;
             if (_type == E_DUNGEON_CUBE_TYPE.NONE)
             {
-                return new Vector3(_pos.x, 0.5f, _pos.y);
+                return new Vector3(_pos.x, 0f, _pos.y);
             }
         }
         return Vector3.zero;
     }
 
-    void Move(GameObject g, int incrementX, int incrementZ)
+    /*void preformConflictPostProcess(Enemy e)
     {
-        g.transform.position += new Vector3(incrementX, 0, incrementZ);
+        // e.monster.GetComponent<Animator>().Play("Attack");
+        Debug.Log("Hit");
+        // Do SomeThing
+    }
+
+    bool checkConflictWithPlayer(Enemy e, Vector3 enemyPos)
+    {
+        bool result = false;
+
+        float distance = (enemyPos - PlayerManager.instance.playerInstance.transform.position).magnitude;
+
+        if(distance < 0.01)
+        {
+            result = true;
+            preformConflictPostProcess(e);
+        }
+
+        return result;
+    }*/
+
+    void Move(Enemy e, int incrementX, int incrementZ)
+    {
+        //bool result = checkConflictWithPlayer(e, e.monster.transform.position + new Vector3(incrementX, 0, incrementZ));
+        
+        // Even if conflict with player, still got priority to move to position
+        e.monster.transform.position += new Vector3(incrementX, 0, incrementZ);
+
+        Vector3 angles = Vector3.up;
+
+        if (incrementX != 0)
+        {
+            if(incrementX > 0)
+            {
+                angles = Vector3.up;
+            }
+            else
+            {
+                angles = Vector3.down;
+            }
+        }
+        else
+        {
+            if(incrementZ > 0)
+            {
+                angles = Vector3.zero;
+            }
+            else
+            {
+                angles = Vector3.down * 2;
+            }
+        }
+
+        e.monster.transform.localEulerAngles = angles * 90f;
+
+        e.monster.GetComponent<Animator>().Play("metarig|walk", -1, 0);
     }
 
     Vector2 WalkDefault(Vector3 position)
@@ -132,6 +188,11 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
     {
         foreach(Enemy enemy in enemyList)
         {
+            if (enemy.isDead)
+            {
+                continue;
+            }
+
             bool isContact = checkContactYogurt(enemy);
 
             if (isContact && enemy.EatYogurtCount <= 5)
@@ -216,8 +277,19 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
                 }
             }
 
-            Debug.Log(System.String.Format("({0},{1})", x, z));
-            Move(enemy.monster, x, z);
+            //Debug.Log(System.String.Format("({0},{1})", x, z));
+            Move(enemy, x, z);
         }
+    }
+    
+    public void Dead(Enemy deadEnemy)
+    {
+        enemyList.Remove(deadEnemy);
+
+        deadEnemy.isDead = true;
+
+        deadEnemy.monster.transform.LookAt(PlayerManager.instance.playerInstance.transform);
+
+        StartCoroutine(deadEnemy.playDeadAnim());
     }
 }
