@@ -11,13 +11,14 @@ public class DungeonMapData {
 	public E_DUNGEON_CUBE_TYPE cubeType;
 	/// <summary> 使用的地型資料 </summary>
 	public DungeonCubeData cubeData;
+	/// <summary> 地圖物件 </summary>
+	public CubeObj cubeObj;
 	/// <summary> 上面的道具種類 </summary>
 	public Item.ItemType itemType;
 	/// <summary> 上面的道具資料 </summary>
 	public Item itemData;
-
-	/// <summary> 地圖物件 </summary>
-	public CubeObj cubeObj;
+	/// <summary> 道具物件 </summary>
+	public GameObject itemObj;
 
 	public DungeonMapData(Vector2 p_pos, int p_type, int p_itemType){
 		Init (p_pos, (E_DUNGEON_CUBE_TYPE)p_type, (Item.ItemType)p_itemType);
@@ -28,7 +29,7 @@ public class DungeonMapData {
 	void Init(Vector2 p_pos, E_DUNGEON_CUBE_TYPE p_type, Item.ItemType p_itemType){
 		pos = p_pos;
 		SetCubeType (p_type);
-		SetCubeType (p_itemType);
+		SetItemType (p_itemType);
 	}
 
 	public void SetCubeType(E_DUNGEON_CUBE_TYPE p_type){
@@ -36,7 +37,7 @@ public class DungeonMapData {
 		cubeData = DungeonManager.GetCubeData (cubeType);
 	}
 
-	public void SetCubeType(Item.ItemType p_itemType){
+	public void SetItemType(Item.ItemType p_itemType){
 		itemType = p_itemType;
 		itemData = ItemManager.GetItemData (itemType);
 	}
@@ -63,6 +64,15 @@ public class DungeonMapData {
 		cubeObj = GameObject.Instantiate (cubeData.cubePrefab).GetComponent<CubeObj>();
 		cubeObj.transform.position = new Vector3(pos.x, 0, pos.y);
 		cubeObj.transform.SetParent (DungeonManager.instance.dungeonTopObj);
+
+		if (itemObj != null) {
+			GameObject.Destroy (itemObj);
+		}
+		if (itemData.objPrefab != null) {
+			itemObj = GameObject.Instantiate (itemData.objPrefab);
+			itemObj.transform.position = new Vector3 (pos.x, 0, pos.y);
+			itemObj.transform.SetParent (cubeObj.transform);
+		}
 	}
 	#endregion
 }

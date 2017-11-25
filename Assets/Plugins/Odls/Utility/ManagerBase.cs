@@ -4,14 +4,17 @@ using System.Text.RegularExpressions;
 
 [DisallowMultipleComponent]
 public class ManagerBase<T> : MonoBehaviour where T:ManagerBase<T>{
-	void Awake(){
+	public void Awake(){
 		if (INSTANCE == null) {
 			INSTANCE = (T)this;
 			GameObject.DontDestroyOnLoad (gameObject);
+			Debug.Log (gameObject.name + " Set As Instance : " + this.GetInstanceID());
 		} else if (INSTANCE.gameObject.GetInstanceID () == gameObject.GetInstanceID ()) {
 			GameObject.DontDestroyOnLoad (gameObject);
+			Debug.Log (gameObject.name + " Is Instance : " + this.GetInstanceID());
 		} else {
 			Destroy(gameObject);
+			Debug.Log (gameObject.name + " Not Instance : " + this.GetInstanceID());
 		}
 	}
 	static T INSTANCE;
