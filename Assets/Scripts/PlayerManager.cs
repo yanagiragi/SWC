@@ -230,7 +230,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 			PlayerItemList [(int)itemType1] = 0;
 			PlayerItemList [(int)itemType2] = 0;
 			SetSlimeMode (resultType);
-			return true;
+            return true;
 		}
 		return false;
 	}
@@ -276,15 +276,23 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     }
 
+    public bool checkConflict()
+    {
+        bool isConflict = false;
+
+        return isConflict;
+    }
+
     public void Move()
     {
         StartCoroutine(LerpPosition());
 
-        bool condition = false;
+        bool condition = checkConflict();
 
-        if (condition) {
+        /*if (isEat) {
             playerInstance.GetComponent<Animator>().Play("Armature|eat", -1, 0);
-        }
+            isEat = false;
+        }*/
     }
 
 	bool islerping = false;
@@ -411,6 +419,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	bool AddItem(Item addItem)
     {
 		Debug.Log ("AddItem : " + addItem.type.ToString());
+        playerInstance.GetComponent<Animator>().Play("Armature|eat", -1, 0);
         bool result = false;
 		Item.ItemType _itemType = addItem.type;
 		if (_itemType == Item.ItemType.food1 || _itemType == Item.ItemType.food2 || _itemType == Item.ItemType.food3)
@@ -427,6 +436,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
                 result = true;
 				if (slimeMode == Item.ItemType.empty) {
 					SetSlimeMode (_itemType);
+
 				} else {
 					Fuse (slimeMode, _itemType);
 				}
