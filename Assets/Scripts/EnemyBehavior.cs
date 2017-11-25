@@ -12,6 +12,8 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
     [ReorderableList]
     public List<int> randomIndex = new List<int>();
 
+    public int EnemyAmount;
+
     private void Awake()
     {
         StepManager.step += EnemyBehavior.instance.UpdateAtStep;
@@ -26,17 +28,17 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
     {
         enemyList.Clear();
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < EnemyAmount; i++)
         {
             GameObject m = Instantiate(monsterBasePrefab, GetEmptyPos(), transform.rotation);
-            enemyList.Add(new Enemy(m, 0));
+            enemyList.Add(new Enemy(m));
         }
     }
 
     Vector3 GetEmptyPos()
     {
         // Try 30 times, may need refactor
-        for (int j = 1; j < 30; j++)
+        for (;;)
         {
             float x = Mathf.Floor(UnityEngine.Random.value * DungeonManager.mapSize.x);
             float y = Mathf.Floor(UnityEngine.Random.value * DungeonManager.mapSize.y);
@@ -46,7 +48,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             E_DUNGEON_CUBE_TYPE _type = _data.cubeType;
             if (_type == E_DUNGEON_CUBE_TYPE.NONE)
             {
-                return new Vector3(_pos.x, 0.5f, _pos.y);
+                return new Vector3(_pos.x, 0f, _pos.y);
             }
         }
         return Vector3.zero;
@@ -132,6 +134,11 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
     {
         foreach(Enemy enemy in enemyList)
         {
+            if (enemy.isDead)
+            {
+                continue;
+            }
+
             bool isContact = checkContactYogurt(enemy);
 
             if (isContact && enemy.EatYogurtCount <= 5)
@@ -216,8 +223,19 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
                 }
             }
 
-            Debug.Log(System.String.Format("({0},{1})", x, z));
+            //Debug.Log(System.String.Format("({0},{1})", x, z));
             Move(enemy.monster, x, z);
         }
+    }
+    
+    public void Dead(Enemy deadEnemy)
+    {
+        enemyList.Remove(deadEnemy);
+
+        deadEnemy.isDead = true;
+
+        deadEnemy.monster.transform.LookAt(PlayerManager.instance.playerInstance.transform);
+
+        StartCoroutine(deadEnemy.playDeadAnim());
     }
 }
