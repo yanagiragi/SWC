@@ -16,6 +16,8 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 	public float moveSpeed = 1;
 	[LockInInspector]public Item.ItemType slimeMode = Item.ItemType.empty;
+	[LockInInspector]public Item.ItemType subMode1 = Item.ItemType.empty;
+	[LockInInspector]public Item.ItemType subMode2 = Item.ItemType.empty;
     public GameObject playerInstance;
     public GameObject yogurtInstance;
     public bool isIdle = true;
@@ -88,19 +90,13 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             return;
         }
 
-        bool isInteracted = CheckDropItemAction();
-        if (isInteracted)
-        {
-            // Wait until Drop Menu Closed
-            isIdle = false;
-
-            UIManger.instance.OpenThrowUI();
-        }
+       
             
-        if (isIdle)
-        {
-            GetNextStepTranslate();
-        }
+		if (isIdle) {
+			GetNextStepTranslate ();
+		}
+
+		CheckDropItemAction();
         
     }
 
@@ -148,27 +144,72 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		UIManger.instance.UpdateSatiation ();
 	}
 
-    public bool CheckDropItemAction()
+    public void CheckDropItemAction()
     {
-        bool isInteracted = false;
 
-        if (Input.GetKeyDown(KeyCode.K)) // Drop Item
-        {
-            isInteracted = true;
-        }
+		Item _item = ItemManager.GetItemData (slimeMode);
 
-        if (Input.GetKeyUp(KeyCode.K)) // Drop Item
-        {
-            isInteracted = true;
-        }
+		switch (_item.fuseLevel) {
+		case 1:
+			if (Input.GetKeyDown (KeyCode.K)) {
+				PlayerManager.instance.PlayerItemList[(int)slimeMode] = 0;
+				SetSlimeMode (Item.ItemType.empty);
+			}
 
-        return isInteracted;
+			break;
+		case 2:
+			if (Input.GetKeyDown (KeyCode.K)) {
+				isIdle = false;
+				UIManger.instance.OpenThrowUI ();
+			}
+
+			if (Input.GetKeyUp (KeyCode.K)) {
+				isIdle = true;
+				UIManger.instance.CloseThrowUI ();
+			}
+
+			if (UIManger.isThrowUIOpen) {
+				if (Input.GetKeyDown (KeyCode.A)) {
+					DeFuse (slimeMode, subMode1);
+					isIdle = true;
+					UIManger.instance.CloseThrowUI ();
+				}
+
+				if (Input.GetKeyDown (KeyCode.D)) {
+					DeFuse (slimeMode, subMode2);
+					isIdle = true;
+					UIManger.instance.CloseThrowUI ();
+				}
+			}
+			break;
+		}
     }
 
 	public void SetSlimeMode(Item.ItemType itemType)
 	{
 		slimeMode = itemType;
 		Debug.Log ("SetSlimeMode : " + itemType.ToString());
+
+		Item _item =  ItemManager.GetItemData (slimeMode);
+
+		switch (slimeMode) {
+		case Item.ItemType.butter:
+			subMode1 = Item.ItemType.milk;
+			subMode2 = Item.ItemType.oil;
+			break;
+		case Item.ItemType.yogurt:
+			subMode1 = Item.ItemType.milk;
+			subMode2 = Item.ItemType.acid;
+			break;
+		case Item.ItemType.poison:
+			subMode1 = Item.ItemType.oil;
+			subMode2 = Item.ItemType.acid;
+			break;
+		default:
+			subMode1 = Item.ItemType.empty;
+			subMode2 = Item.ItemType.empty;
+			break;
+		}
 
         Material ReplaceMat = MaterialMap[(int) itemType];
 
@@ -245,6 +286,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             PlayerItemList[(int)resultType] = 1;
             PlayerItemList[(int)FusedItemType] = 0;
             PlayerItemList[(int)dropItemType] = 0;
+			SetSlimeMode (resultType);
         }
         else
         {

@@ -11,8 +11,14 @@ public class Item
     };
 
     public ItemType type;
-    public bool canFuse;
+	public bool canFuse{
+		get{
+			return (fuseLevel==1);
+		}
+	}
 	public bool canDrop;
+	/// <summary> 融合階層 </summary>
+	public int fuseLevel;
 	/// <summary> 道具物件的Prefab </summary>
 	public GameObject objPrefab;
 	/// <summary> 出現率 </summary>
@@ -25,7 +31,7 @@ public class Item
     public Item(ItemType type, bool canFuse, bool canDrop)
     {
         this.type = type;
-        this.canFuse = canFuse;
+//        this.canFuse = canFuse;
         this.canDrop = canDrop;
     }
 
