@@ -12,6 +12,6 @@ public class GameOverManager : ManagerBase<GameOverManager> {
 
         // After All Done
 
-        RestartManager.ReStart();
+        // RestartManager.ReStart();
     }
 }

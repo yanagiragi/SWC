@@ -58,6 +58,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             PlayerItemList[(int)Item.ItemType.yogurt] = 0;
             yogurtInstance.transform.position = playerInstance.transform.position;
             yogurtCount = 0;
+            SetSlimeMode(Item.ItemType.empty);
         }
         else
         {
@@ -120,6 +121,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     {
 		instance.health = Mathf.Max(instance.health - amount, 0);
 		UIManger.instance.UpdateBloodBar ();
+        UIManger.instance.PlayHurtEffect();
     }
 
 	public static void SetFood(float p_food)
