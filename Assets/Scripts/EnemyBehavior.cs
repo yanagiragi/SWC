@@ -105,8 +105,6 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             Move(enemy, x, y);
         }
 
-        
-
         if (priority == false)
         {
             Quaternion monsterRotation = Quaternion.LookRotation(sulimo.transform.position - monster.transform.position, Vector3.up);//
