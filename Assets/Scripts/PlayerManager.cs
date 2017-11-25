@@ -10,6 +10,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     public float health = 100;
 
     public GameObject playerInstance;
+    public GameObject yogurtInstance;
     public bool isIdle = true;
     private bool isDrop = false;
     private bool isWalk = false;
