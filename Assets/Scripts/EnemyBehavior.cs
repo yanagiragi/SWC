@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *  Note: No Dealing Enemy Conflicts with each other
+ */
+
 public class EnemyBehavior : ManagerBase<EnemyBehavior>
 {
     public GameObject monsterBasePrefab;
@@ -81,7 +85,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
         //bool result = checkConflictWithPlayer(e, e.monster.transform.position + new Vector3(incrementX, 0, incrementZ));
         
         // Even if conflict with player, still got priority to move to position
-        e.monster.transform.position += new Vector3(incrementX, 0, incrementZ);
+        //e.monster.transform.position += new Vector3(incrementX, 0, incrementZ);
 
         Vector3 angles = Vector3.up;
 

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraManager : ManagerBase<CameraManager> {
-    public Vector3 Offset;
+	public Transform cmrCenter;
     void Update () {
-        Camera.main.gameObject.transform.position = PlayerManager.instance.playerInstance.transform.position + Offset;
+		cmrCenter.position = PlayerManager.instance.playerInstance.transform.position;
     }
 }
