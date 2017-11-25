@@ -15,7 +15,7 @@ public class EnemyBehavior : MonoBehaviour
 
 
 
-    void UpdateAtStep()//怪物面向史萊姆 離開一定距離(mindist)去追蹤目標物件
+    void Update()//怪物面向史萊姆 離開一定距離(mindist)去追蹤目標物件
     {
 
         if (priority == false)
@@ -26,7 +26,7 @@ public class EnemyBehavior : MonoBehaviour
             monster.transform.rotation = monsterRotation;
             if (Vector3.Distance(sulimo.transform.position, monster.transform.position) > mindist)
             {
-                monstermove.Play(1);
+                //monstermove.Play(1);
 
                 transform.position += transform.forward * move * Time.deltaTime;
 
@@ -34,7 +34,7 @@ public class EnemyBehavior : MonoBehaviour
             }
             else
             {
-                attack.Play(1);
+                //attack.Play(1);
             }
         }
     }
@@ -46,7 +46,7 @@ public class EnemyBehavior : MonoBehaviour
 
             if (attract.tag == "yogurt")
             {
-
+                
             }
 
         }
