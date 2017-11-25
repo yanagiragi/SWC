@@ -28,10 +28,10 @@ public class DungeonMapData {
 	void Init(Vector2 p_pos, E_DUNGEON_CUBE_TYPE p_type, Item.ItemType p_itemType){
 		pos = p_pos;
 		cubeType = p_type;
-		cubeData = DungeonManager.GetCubeData (p_type);
+		cubeData = DungeonManager.GetCubeData (cubeType);
 
 		itemType = p_itemType;
-		itemData = ItemManager.GetItemData (p_type);
+		itemData = ItemManager.GetItemData (itemType);
 	}
 
 }
