@@ -5,56 +5,47 @@ using UnityEngine;
 public class EnemyManager : ManagerBase<EnemyManager>
 {
     public GameObject monster;
-    public GameObject sulimo;
-    public int mindist = 1;
-    public float move = 1;
-    public Animator attack,monstermove;//怪物移動攻擊動畫
-    private int monsterHP;
-    private bool priority=false;
+    public int i,j=1;
 
+  
 
-    void Update()//怪物面向史萊姆 離開一定距離(mindist)去追蹤目標物件
+    void Start()
     {
-
-        if (priority == false)
-        {
-            Quaternion monsterRotation = Quaternion.LookRotation(sulimo.transform.position - monster.transform.position, Vector3.up);//
-            float monsterRotateSpeed = 4;
-            monster.transform.rotation = Quaternion.Slerp(monster.transform.rotation, monsterRotation, Time.deltaTime * monsterRotateSpeed);
-            monster.transform.rotation = monsterRotation;
-            if (Vector3.Distance(sulimo.transform.position, monster.transform.position) > mindist)
+        
+        for (i = 0; i<=30; i++)
             {
-                monstermove.Play(1);
+                Instantiate(monster, GetEmptyPos(), transform.rotation);
 
-                transform.position += transform.forward * move * Time.deltaTime;
+
+
+
+
 
 
             }
-            else
-            {
-                attack.Play(1);
-            }
-        }
-    }
-    void OnTriggerStay(Collider attract)//遇到優格被吸引 切斷攻擊以及移動
-    {
-        priority = true;
-        if (priority = true)
-        {
-
-            if (attract.tag == "yogurt")
-            {
-               
-            }
-
-        }
-    }
-    void OnTriggerEnter(Collider Corrosion)//碰到毒 怪物掛點
-    {
-        if (Corrosion.tag == "poison")
-        {
-            destroy(monster);
-        }
     }
 
+
+	Vector3 GetEmptyPos()
+	{   
+
+		for(j=1;j<30;j++)
+		{
+			float x = Mathf.Floor(Random.value*DungeonManager.mapSize.x);
+			float y = Mathf.Floor(Random.value*DungeonManager.mapSize.y);
+
+
+			Vector2 _pos = new Vector2(x,y);
+			DungeonMapData _data = DungeonManager.GetMapData(_pos);
+			E_DUNGEON_CUBE_TYPE _type = _data.cubeType;
+			if( _type == E_DUNGEON_CUBE_TYPE.NONE )
+			{
+
+				return new Vector3(_pos.x, 0.5f, _pos.y);
+			
+			}
+
+		}
+		return Vector3.zero;
+	}
 }

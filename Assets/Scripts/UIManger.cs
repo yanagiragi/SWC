@@ -13,7 +13,24 @@ public class UIManger : ManagerBase<UIManger>
     [SerializeField] Image bloodBar;
     [SerializeField] Image satiationBar;
     [SerializeField] Text FoodInfo;
+    [SerializeField] Image ThrowUI;
+    static public bool isThrowUIOpen = false;
 
+    void Update()
+	{
+        if(!isThrowUIOpen)
+        {
+            PlayerManager.instance.isIdle = true;
+        }
+		/*if(Input.GetKeyDown(KeyCode.C))
+		{
+            OpenThrowUI();
+        }
+        if(Input.GetKeyUp(KeyCode.C))
+		{
+            OpenThrowUI();
+        }*/
+	}
     void UpdateAtStep()
     {
         UpdateBloodBar();
@@ -34,5 +51,25 @@ public class UIManger : ManagerBase<UIManger>
 	public void UpdateFoodInfo()
 	{
         FoodInfo.text = "食物數量 : " + FoodAmount;
+    }
+
+	public void OpenThrowUI()
+	{
+        if (!isThrowUIOpen)
+        {
+            ThrowUI.gameObject.SetActive(true);
+            ThrowUI.gameObject.GetComponent<Animator>().SetTrigger("OpenThrowUI");
+            isThrowUIOpen = true;
+        }
+		else
+		{
+			isThrowUIOpen = false;
+            ThrowUI.gameObject.GetComponent<Animator>().SetTrigger("CloseThrowUI");
+		}
+    }
+
+    public void OpenShopUI()
+    {
+
     }
 }
