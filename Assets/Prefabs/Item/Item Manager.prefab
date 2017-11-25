@@ -56,30 +56,56 @@ MonoBehaviour:
   - type: 0
     canFuse: 0
     canDrop: 0
+    objPrefab: {fileID: 0}
+    rate: 220
   - type: 1
     canFuse: 1
     canDrop: 1
+    objPrefab: {fileID: 1163927873038780, guid: fcf5bda6496128f47aa20a9ade64aa16,
+      type: 2}
+    rate: 5
   - type: 2
     canFuse: 1
     canDrop: 1
+    objPrefab: {fileID: 1515648205902198, guid: 35c8d8483e2f167469a74bf977eacb00,
+      type: 2}
+    rate: 5
   - type: 3
     canFuse: 0
     canDrop: 1
+    objPrefab: {fileID: 0}
+    rate: 0
   - type: 4
     canFuse: 1
     canDrop: 1
+    objPrefab: {fileID: 1144971818062304, guid: 7261d1e14a7cc514aab0b7b1420e94b3,
+      type: 2}
+    rate: 5
   - type: 5
     canFuse: 0
     canDrop: 1
+    objPrefab: {fileID: 0}
+    rate: 0
   - type: 6
     canFuse: 0
     canDrop: 1
+    objPrefab: {fileID: 0}
+    rate: 0
   - type: 7
     canFuse: 0
     canDrop: 0
+    objPrefab: {fileID: 1144971818062304, guid: c227db30acbcb3346b02de6240428537,
+      type: 2}
+    rate: 3
   - type: 8
     canFuse: 0
     canDrop: 0
+    objPrefab: {fileID: 1144971818062304, guid: e333d070460608944b39233952d6000d,
+      type: 2}
+    rate: 3
   - type: 9
     canFuse: 0
     canDrop: 0
+    objPrefab: {fileID: 1144971818062304, guid: 7ae4ba32f95b7f14eb0027090505a4bd,
+      type: 2}
+    rate: 1
