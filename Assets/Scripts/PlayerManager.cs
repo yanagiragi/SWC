@@ -14,9 +14,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     public GameObject playerInstance;
     public GameObject yogurtInstance;
     public bool isIdle = true;
-    private bool isDrop = false;
-    private bool isWalk = false;
-    private bool isEat = false;
 
     private Vector3 nextPosition;
     private Vector3 rotationAngles;
@@ -41,9 +38,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		instance.destination = new Vector3 (DungeonManager.homePos.x, 0, DungeonManager.homePos.y);
 		instance.playerInstance.transform.position = instance.destination;
 		instance.isIdle = true;
-		instance.isDrop = false;
-		instance.isWalk = false;
-		instance.isEat = false;
 	}
 
     // Called Every Frame
@@ -66,7 +60,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             
         if (isIdle)
         {
-            isEat = false;
             GetNextStepTranslate();
         }
         
@@ -93,13 +86,11 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
         if (Input.GetKeyDown(KeyCode.K)) // Drop Item
         {
-            isDrop = true;
             isInteracted = true;
         }
 
         if (Input.GetKeyUp(KeyCode.K)) // Drop Item
         {
-            isDrop = true;
             isInteracted = true;
         }
 
@@ -205,7 +196,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         bool condition = false;
 
         if (condition) {
-            isEat = true;
             playerInstance.GetComponent<Animator>().Play("Armature|eat", -1, 0);
         }
     }
@@ -218,9 +208,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         {
 			playerInstance.transform.position = Vector3.MoveTowards(playerInstance.transform.position, destination, moveSpeed * Time.deltaTime);
             yield return null;
-			if (!isWalk) {
-				isWalk = false;
-			}
         }
 		playerInstance.transform.position = destination;
 
@@ -241,71 +228,71 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         rotationAngles = Vector3.zero;
     }
 
+	Queue<KeyCode> keyQueue = new Queue<KeyCode>();
 
     public void GetNextStepTranslate()
-    {
-        bool isPress = false;
-        
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            isPress = true;
-            
-            nextPosition = Vector3.forward;
-            rotationAngles = Vector3.zero * 90f;
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            isPress = true;
-            nextPosition = Vector3.back;
-            rotationAngles = Vector3.down * 180f;
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            isPress = true;
-            nextPosition = Vector3.left;
-            rotationAngles = Vector3.down * 90f;
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            isPress = true;
-            nextPosition = Vector3.right;
-            rotationAngles = Vector3.up * 90f;
-        }
+    {        
+		if (Input.GetKeyDown(KeyCode.W)){
+			keyQueue.Enqueue (KeyCode.W);
+		}
+		else if (Input.GetKeyDown(KeyCode.S)){
+			keyQueue.Enqueue (KeyCode.S);
+		}
+		else if (Input.GetKeyDown(KeyCode.A)){
+			keyQueue.Enqueue (KeyCode.A);
+		}
+		else if (Input.GetKeyDown(KeyCode.D)){
+			keyQueue.Enqueue (KeyCode.D);
+		}
+		       
 
-        if (isPress)
+		if (!islerping)
         {
-            if (!isWalk)
-            {
-				playerInstance.GetComponent<Animator>().Play("Armature|jump", -1, 0);
+			if (keyQueue.Count <= 0) {
+				return;
+			}
 
-				Vector3 _nextPos = instance.destination + instance.nextPosition;
-				DungeonMapData _data = DungeonManager.GetMapData ((int)_nextPos.x, (int)_nextPos.z);
+			KeyCode _nowKey = keyQueue.Dequeue ();
 
-				if (_data.cubeData.canThrough) {
-					if ((_data.itemData.canFuse) && (slimeMode != Item.ItemType.empty)) {
-						Item.ItemType resultType = CheckFuse (slimeMode, _data.itemType);
-						if ((int)resultType > (int)Item.ItemType.poison) {
-							// 吃到全部，不能合成
-						} else {
-							isWalk = true;
-							StepManager.InvokeStep ();
-						}
-					}else{
-						isWalk = true;
+			switch(_nowKey){
+			case KeyCode.W:          
+				nextPosition = Vector3.forward;
+				rotationAngles = Vector3.zero * 90f;
+				break;
+			case KeyCode.S:
+				nextPosition = Vector3.back;
+				rotationAngles = Vector3.down * 180f;
+				break;
+			case KeyCode.A:
+				nextPosition = Vector3.left;
+				rotationAngles = Vector3.down * 90f;
+				break;
+			case KeyCode.D:
+				nextPosition = Vector3.right;
+				rotationAngles = Vector3.up * 90f;
+				break;
+			}
+
+			playerInstance.GetComponent<Animator>().Play("Armature|jump", -1, 0);
+
+			Vector3 _nextPos = instance.destination + instance.nextPosition;
+			DungeonMapData _data = DungeonManager.GetMapData ((int)_nextPos.x, (int)_nextPos.z);
+
+			if (_data.cubeData.canThrough) {
+				if ((_data.itemData.canFuse) && (slimeMode != Item.ItemType.empty)) {
+					Item.ItemType resultType = CheckFuse (slimeMode, _data.itemType);
+					if ((int)resultType > (int)Item.ItemType.poison) {
+						// 吃到全部，不能合成
+					} else {
 						StepManager.InvokeStep ();
 					}
-
-				} else {
-					isWalk = false;
-					playerInstance.GetComponent<Animator>().SetBool("isWalk", isWalk);
-					Rotate ();
+				}else{
+					StepManager.InvokeStep ();
 				}
-            }
-        }
-        else
-        {
-            isWalk = false;
-            playerInstance.GetComponent<Animator>().SetBool("isWalk", isWalk);
+
+			} else {
+				Rotate ();
+			}
         }
     }
 
