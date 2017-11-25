@@ -4,18 +4,13 @@ using UnityEngine;
 
 public class EnemyBehavior : ManagerBase<EnemyBehavior>
 {
-    public GameObject monster;
-    public GameObject sulimo;
-    public int mindist = 1;
-    public float move = 1;
-    public Animator attack, monstermove;//怪物移動攻擊動畫
-    private int monsterHP;
-    private bool priority = false;
-
+    public GameObject monsterBasePrefab;
+    
     [ReorderableList]
     public List<Enemy> enemyList = new List<Enemy>();
 
-    private List<int> randomIndex = new List<int>();
+    [ReorderableList]
+    public List<int> randomIndex = new List<int>();
 
     private void Awake()
     {
@@ -81,7 +76,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
 
         for (i = 0; i < 4; ++i)
         {
-            switch (i)
+            switch (randomIndex[i])
             {
                 case 0: // (1, 0)
                     increment.x = 1;
@@ -109,14 +104,14 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             try
             {
                 cubeData = DungeonManager.GetMapData(testPosition);
-                if (cubeData.cubeType == E_DUNGEON_CUBE_TYPE.NONE)
+                if (cubeData.cubeData.canThrough)
                 {
                     break;
                 }
             }
             catch(System.Exception e)
             {
-
+                ;
             }
         }
         
@@ -125,21 +120,16 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             increment = Vector2.zero;
         }
 
-        Debug.Log(increment);
-        
         return increment;
     }
 
     public bool checkContactYogurt(Enemy enemy)
     {
-        Debug.Log(enemy.monster.transform.position - PlayerManager.instance.yogurtInstance.transform.position);
         return (enemy.monster.transform.position - PlayerManager.instance.yogurtInstance.transform.position).sqrMagnitude < 0.01;
     }
 
     public void UpdateAtStep()//怪物面向史萊姆 離開一定距離(mindist)去追蹤目標物件
     {
-        Debug.Log(enemyList.Count);
-
         foreach(Enemy enemy in enemyList)
         {
             bool isContact = checkContactYogurt(enemy);
@@ -148,6 +138,11 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             {
                 Debug.Log("Eat Yougurt!");
                 ++ enemy.EatYogurtCount;
+
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // Call Yogurt Delete
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
                 return;
             }
             else if(enemy.EatYogurtCount == 6)
@@ -173,9 +168,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
 
             int x = 0;
             int z = 0;
-
-            //Debug.Log(System.String.Format("({0},{1})", ActualDirection.x, ActualDirection.z));
-
+            
             float max = Mathf.Max(Mathf.Abs(ActualDirection.x), Mathf.Abs(ActualDirection.z));
             if(Mathf.Abs(ActualDirection.x) > Mathf.Abs(ActualDirection.z))
             {
@@ -188,7 +181,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
                 x = 0;
             }
 
-            Debug.Log(System.String.Format("({0},{1})", x, z));
+            //Debug.Log(System.String.Format("({0},{1})", x, z));
 
             if (x == 0 && z == 0)
             {
@@ -203,7 +196,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
                 {
                     Vector2 newPos =  new Vector2(enemy.monster.transform.position.x + x, enemy.monster.transform.position.z + z);
                     cubeData = DungeonManager.GetMapData(newPos);
-                    if (cubeData.cubeType != E_DUNGEON_CUBE_TYPE.WALL)
+                    if (cubeData.cubeData.canThrough)
                     {
                         ;
                     }
@@ -226,41 +219,5 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             Debug.Log(System.String.Format("({0},{1})", x, z));
             Move(enemy.monster, x, z);
         }
-
-        /*if (priority == false)
-        {
-            Quaternion monsterRotation = Quaternion.LookRotation(sulimo.transform.position - monster.transform.position, Vector3.up);//
-            float monsterRotateSpeed = 4;
-            monster.transform.rotation = Quaternion.Slerp(monster.transform.rotation, monsterRotation, Time.deltaTime * monsterRotateSpeed);
-            monster.transform.rotation = monsterRotation;
-            if (Vector3.Distance(sulimo.transform.position, monster.transform.position) > mindist)
-            {
-                //monstermove.Play(1);
-                transform.position += transform.forward * move * Time.deltaTime;
-            }
-            else
-            {
-                //attack.Play(1);
-            }
-        }*/
     }
-    void OnTriggerStay(Collider attract)//遇到優格被吸引 切斷攻擊以及移動
-    {
-        priority = true;
-        if (priority = true)
-        {
-            if (attract.tag == "yogurt")
-            {
-                
-            }
-        }
-    }
-    void OnTriggerEnter(Collider Corrosion)//碰到毒 怪物掛點
-    {
-        if (Corrosion.tag == "poison")
-        {
-            Destroy(monster);
-        }
-    }
-
 }
