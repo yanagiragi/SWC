@@ -21,9 +21,9 @@ public class ItemManager : ManagerBase<ItemManager> {
         ItemList.Add(new Item(Item.ItemType.food3, false, false));
     }
 
-    Item GetItemData(Item.ItemType type)
+    public static Item GetItemData(Item.ItemType type)
     {
-        return ItemList[(int)type];
+        return ItemManager.instance.ItemList[(int)type];
     }
 
 }
