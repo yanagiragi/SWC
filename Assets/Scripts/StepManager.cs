@@ -6,23 +6,21 @@ using UnityEngine;
 public class StepManager : ManagerBase<StepManager> {
 
     public static event Action step;
-    
-    StepManager()
+
+    private void Awake()
     {
-        step = delegate ()
-        {
-            UpdateStep();
-        };
+        step += StepManager.UpdateStep;
     }
 
-    ~StepManager()
+    public static void InvokeStep()
     {
-
+        step.Invoke();
     }
-    
-    void UpdateStep()
+
+
+    public static void UpdateStep()
     {
         // Update All Managers
-        PlayerManager.instance.UpdateAtStep();
+        //PlayerManager.UpdateAtStep();
     }
 }
