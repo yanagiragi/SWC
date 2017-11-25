@@ -46,7 +46,7 @@ public class slimeBehaviourManger : ManagerBase<slimeBehaviourManger>
 
     void AcidMeltWall()
     {
-
+        
     }
 
     void WalkOnWater()
