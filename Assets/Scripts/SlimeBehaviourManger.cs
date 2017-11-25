@@ -19,6 +19,8 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     public int milkInterval = 5;
     public int milkCount = 0;
 
+    bool abilityIsUse = false;
+
     DungeonMapData nextStepData;
 
     void Awake()
@@ -28,7 +30,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     public void UpdateAtStep()
     {
-//        Debug.Log("Step");
+        Debug.Log("Step");
         GetcurrentBehaviourType();
         if (!haveCoolDown)
         {
@@ -42,14 +44,21 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                 UIManger.instance.AbilityCoolDown((float)abilityCoolDown / (float)CoolDownTime);
                 abilityCoolDown -= 1;
                 isCoolDowm = true;
-                    
+
             }
-            else if(abilityCoolDown == 0)
+            else if (abilityCoolDown == 0)
             {
+                abilityIsUse = false;
                 isCoolDowm = false;
                 DoBehaviourEffect();
+
+            }
+
+            if (abilityIsUse)
+            {
+                isCoolDowm = true;
                 abilityCoolDown = CoolDownTime;
-                UIManger.instance.AbilityCoolDown(0);
+                UIManger.instance.AbilityCoolDown(1);
             }
         }
     }
@@ -57,6 +66,10 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     void GetcurrentBehaviourType()
     {
         haveCoolDown = false;
+        if (currentBehaviourType == Item.ItemType.butter)
+        {
+            haveCoolDown = true;
+        }
         currentBehaviourType = PlayerManager.instance.slimeMode;
     }
 
@@ -71,6 +84,11 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         {
             Debug.Log("Put Yogurt!");
             PutYogurt();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && currentBehaviourType == Item.ItemType.butter && isCoolDowm == false)
+        {
+            CrossWall();
         }
     }
 
@@ -87,10 +105,6 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
             case Item.ItemType.oil:
                 WalkOnWater();
                 break;
-            case Item.ItemType.butter:
-                if (!isCoolDowm)
-                    CrossWall();
-                break;
             case Item.ItemType.poison:
                 if (!isCoolDowm)
                     ;//PoisonKill();
@@ -100,7 +114,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                 break;
         }
 
-       
+
 
     }
 
@@ -144,7 +158,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
             if (currentBehaviourType != Item.ItemType.oil)
             {
                 PlayerManager.DecreaseHealth(WaterDamage);
-//                Debug.Log(PlayerManager.instance.health);
+                Debug.Log(PlayerManager.instance.health);
             }
         }
     }
@@ -154,40 +168,66 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         try
         {
             if (DungeonManager.GetMapData(playerPosition + new Vector2(1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
-            DungeonManager.GetMapData(playerPosition + new Vector2(1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            DungeonManager.GetMapData(playerPosition + new Vector2(1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER ||
+            DungeonManager.GetMapData(playerPosition + new Vector2(1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
             {
-                PlayerManager.instance.playerInstance.transform.position = playerPosition + new Vector2(1, 1);
-                return;
+                if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D))
+                {
+                    PlayerManager.instance.destination += new Vector3(1, 0, 1);
+                    PlayerManager.instance.Move();
+                    abilityIsUse = true;
+                    return;
+                }
             }
         }
         catch { }
         try
         {
             if (DungeonManager.GetMapData(playerPosition + new Vector2(-1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
-            DungeonManager.GetMapData(playerPosition + new Vector2(-1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            DungeonManager.GetMapData(playerPosition + new Vector2(-1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER ||
+            DungeonManager.GetMapData(playerPosition + new Vector2(-1, 11)).cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
             {
-                PlayerManager.instance.playerInstance.transform.position = playerPosition + new Vector2(-1, 1);
-                return;
+                Debug.Log(DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType);
+                if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.W))
+                {
+                    PlayerManager.instance.destination += new Vector3(-1, 0, 1);
+                    PlayerManager.instance.Move();
+                    abilityIsUse = true;
+                    return;
+                }
             }
         }
         catch { }
         try
         {
             if (DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
-            DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER|| 
+            DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
             {
-                PlayerManager.instance.playerInstance.transform.position = playerPosition + new Vector2(1, -1);
-                return;
+                if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.S))
+                {
+                    PlayerManager.instance.destination += new Vector3(1, 0, -1);
+                    PlayerManager.instance.Move();
+                    abilityIsUse = true;
+                    return;
+                }
             }
         }
         catch { }
         try
         {
             if (DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
-            DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER ||
+            DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
             {
-                PlayerManager.instance.playerInstance.transform.position = playerPosition + new Vector2(-1, -1);
-                return;
+                Debug.Log(DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType);
+                if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.S))
+                {
+                    PlayerManager.instance.destination += new Vector3(-1, 0, -1);
+                    PlayerManager.instance.Move();
+                    abilityIsUse = true;
+                    return;
+                }
             }
         }
         catch { }
@@ -208,7 +248,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     public void GetNextStep(DungeonMapData getNextStepData)
     {
-//        Debug.Log(getNextStepData);
+        Debug.Log(getNextStepData);
         nextStepData = getNextStepData;
     }
 
