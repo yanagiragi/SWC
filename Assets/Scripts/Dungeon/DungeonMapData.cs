@@ -56,5 +56,13 @@ public class DungeonMapData {
 	public static int CompareByNeighborCount(DungeonMapData p_A, DungeonMapData p_B){
 		return p_A.neighborCount.CompareTo (p_B.neighborCount);
 	}
+	public void RefrashObj(){
+		if (cubeObj != null) {
+			GameObject.Destroy (cubeObj.gameObject);
+		}
+		cubeObj = GameObject.Instantiate (cubeData.cubePrefab).GetComponent<CubeObj>();
+		cubeObj.transform.position = new Vector3(pos.x, 0, pos.y);
+		cubeObj.transform.SetParent (DungeonManager.instance.dungeonTopObj);
+	}
 	#endregion
 }

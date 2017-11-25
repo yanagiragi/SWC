@@ -23,6 +23,8 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 
 	public Transform dungeonTopObj;
 
+
+#region "Init"
 	/// <summary> 初始化地形資料 </summary>
 	void InitCubeDatas () {
 		int len = cubeDatas.Length;
@@ -202,30 +204,37 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 
 		#endregion
 
-		GenerateObj (_groupID);
+//		GenerateObjWithColor (_groupID);
 	}
 
 	Color[] _colors = null;
-	void GenerateObj(int p_maxGroupID){
-//		if (_colors == null) {
-//			_colors = new Color[p_maxGroupID + 1];
-//			for (int f = 0; f <= p_maxGroupID; f++) {
-//				_colors [f] = Random.ColorHSV ();
-//			}
-//		}
+	void GenerateObj(){
+		for (int y = 0; y < mapSize.y; y++) {
+			for (int x = 0; x < mapSize.x; x++) {
+				mapsDatas [x, y].RefrashObj();
+			}
+		}
+	}
+	void GenerateObjWithColor(int p_maxGroupID){
+		if (_colors == null) {
+			_colors = new Color[p_maxGroupID + 1];
+			for (int f = 0; f <= p_maxGroupID; f++) {
+				_colors [f] = Random.ColorHSV ();
+			}
+		}
 		for (int y = 0; y < mapSize.y; y++) {
 			for (int x = 0; x < mapSize.x; x++) {
 				DungeonMapData _data = mapsDatas [x, y];
 				_data.cubeObj = Instantiate (_data.cubeData.cubePrefab).GetComponent<CubeObj>();
 				_data.cubeObj.transform.position = new Vector3(_data.pos.x, 0, _data.pos.y);
 				_data.cubeObj.transform.SetParent (dungeonTopObj);
-//				if(_data.groupID >= 0){
-//					_data.cubeObj.SetColor(_colors[_data.groupID]);
-////				}else if(_data.groupID == -2){
-////					_data.cubeObj.SetColor(Color.white);
-//				}else{
-//					_data.cubeObj.SetColor(Color.blue);
-//				}
+				if(_data.groupID >= 0){
+					_data.cubeObj.SetColor(_colors[_data.groupID]);
+//				}else if(_data.groupID == -2){
+//					_data.cubeObj.SetColor(Color.white);
+				}else{
+					_data.cubeObj.SetColor(Color.blue);
+				}
 			}
 		}
 	}
@@ -274,6 +283,7 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 		}
 		return E_DUNGEON_CUBE_TYPE.NONE;
 	}
+#endregion
 
 #region "取資料"
 	/// <summary>
@@ -305,13 +315,33 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 	}
 #endregion
 
+	/// <summary>
+	/// 改變 p_pos 位置的地城格子種類
+	/// </summary>
+	static public void ChangeCubeType(Vector2 p_pos, E_DUNGEON_CUBE_TYPE p_type){
+		ChangeCubeType ((int)p_pos.x, (int)p_pos.y, p_type);
+	}
+
+	/// <summary>
+	/// 改變 p_x, p_y 位置的地城格子種類
+	/// </summary>
+	static public void ChangeCubeType(int p_x, int p_y, E_DUNGEON_CUBE_TYPE p_type){
+		DungeonMapData _mapData = mapsDatas[p_x, p_y];
+		_mapData.SetCubeType (p_type);
+		_mapData.RefrashObj ();
+	}
+	[Button]public string changeCubeTypeTestBut = "ChangeCubeTypeTest";
+	public void ChangeCubeTypeTest(){
+		ChangeCubeType (Random.Range(0, 100), Random.Range(0, 100), E_DUNGEON_CUBE_TYPE.NONE);
+	}
+
 	void Awake () {
 		InitCubeDatas ();
 		InitDungeon ();
+		GenerateObj ();
 	}
 
 	void Start () {
-		
 	}
 
 	void Update () {
