@@ -6,13 +6,11 @@ using UnityEngine;
 public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 {
     [SerializeField] Item.ItemType currentBehaviourType;
-    [SerializeField] GameObject bait;
-
     [SerializeField] int BloodIncrease;
-    static public int AbilityCoolDown = 0;
+    static public int abilityCoolDown = 0;
     bool isCoolDowm;
-    public static bool HaveCoolDown = false;
-    [SerializeField] int CoolDownTime;
+    public static bool haveCoolDown = false;
+    [SerializeField] public int CoolDownTime;
     [SerializeField] int WaterDamage;
     [SerializeField] GameObject Yogurt;
     Vector2 playerPosition;
@@ -27,61 +25,73 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //currentBehaviourType();
-            if (AbilityCoolDown > 1 && HaveCoolDown)
+            GetcurrentBehaviourType();
+            if (!haveCoolDown)
             {
-                AbilityCoolDown -= 1;
-                isCoolDowm = true;
+                DoBehaviourEffect();
+                UIManger.instance.AbilityCoolDown(0);
             }
-            DoBehaviourEffect();
-            if (AbilityCoolDown == 0 && HaveCoolDown)
+            else
             {
-                isCoolDowm = false;
-                AbilityCoolDown = CoolDownTime;
+                if (abilityCoolDown > 0)
+                {
+                    UIManger.instance.AbilityCoolDown((float)abilityCoolDown / (float)CoolDownTime);
+                    abilityCoolDown -= 1;
+                    isCoolDowm = true;
+                    
+                }
+                else if(abilityCoolDown == 0)
+                {
+                    isCoolDowm = false;
+                    DoBehaviourEffect();
+                    abilityCoolDown = CoolDownTime;
+                    UIManger.instance.AbilityCoolDown(0);
+                }
             }
 
-            Debug.Log(DungeonManager.GetMapData(playerPosition).pos);
         }
     }
 
-    /* Item.ItemType currentBehaviourType()
+    void GetcurrentBehaviourType()
     {
+        haveCoolDown = true;
+        return;
         if (PlayerManager.instance.PlayerItemList.Contains(1))
         {
-            HaveCoolDown = true;
-            return Item.ItemType.milk;
+            haveCoolDown = true;
+            //currentBehaviourType = Item.ItemType.milk;
         }
         else if (PlayerManager.instance.PlayerItemList.Contains(2))
         {
-            HaveCoolDown = false;
-            return Item.ItemType.oil;
+            haveCoolDown = false;
+            //currentBehaviourType = Item.ItemType.oil;
         }
         else if (PlayerManager.instance.PlayerItemList.Contains(3))
         {
-            HaveCoolDown = true;
-            return Item.ItemType.butter;
+            haveCoolDown = true;
+            //currentBehaviourType = Item.ItemType.butter;
         }
         else if (PlayerManager.instance.PlayerItemList.Contains(4))
         {
-            HaveCoolDown = true;
-            return Item.ItemType.acid;
+            haveCoolDown = true;
+            //currentBehaviourType = Item.ItemType.acid;
         }
         else if (PlayerManager.instance.PlayerItemList.Contains(5))
         {
-            HaveCoolDown = true;
-            return Item.ItemType.yogurt;
+            haveCoolDown = true;
+            //currentBehaviourType = Item.ItemType.yogurt;
         }
         else if (PlayerManager.instance.PlayerItemList.Contains(6))
         {
-            HaveCoolDown = true;
-            return Item.ItemType.poison;
+            haveCoolDown = true;
+            //currentBehaviourType = Item.ItemType.poison;
         }
         else
         {
-            HaveCoolDown = false;
-            return Item.ItemType.empty;
+            haveCoolDown = false;
+            //currentBehaviourType = Item.ItemType.empty;
         }
-    } */
+    }
 
     public void UpdatePlayerPosition(Vector3 playerPositionGet)
     {
@@ -94,29 +104,23 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         switch (currentBehaviourType)
         {
             case Item.ItemType.milk:
-                HaveCoolDown = true;
                 MilkIncreaseBlood();
                 break;
             case Item.ItemType.acid:
-                HaveCoolDown = true;
                 AcidMeltWall();
                 break;
             case Item.ItemType.oil:
-                HaveCoolDown = false;
                 WalkOnWater();
                 break;
             case Item.ItemType.butter:
-                HaveCoolDown = true;
                 if (!isCoolDowm)
                     CrossWall();
                 break;
             case Item.ItemType.poison:
-                HaveCoolDown = true;
                 if (!isCoolDowm)
                     PoisonKill();
                 break;
             case Item.ItemType.yogurt:
-                HaveCoolDown = true;
                 PutYogurt();
                 break;
         }
@@ -198,7 +202,6 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void PoisonKill()
     {
-        
 
     }
 

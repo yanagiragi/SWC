@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *  Note: No Dealing Enemy Conflicts with each other
+ */
+
 public class EnemyBehavior : ManagerBase<EnemyBehavior>
 {
     public GameObject monsterBasePrefab;
@@ -16,8 +20,6 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
 
     private void Awake()
     {
-        //StepManager.step += EnemyBehavior.instance.UpdateAtStep;
-
         for (int i = 0; i < 4; ++i)
         {
             randomIndex.Add(i);
@@ -54,35 +56,8 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
         return Vector3.zero;
     }
 
-    /*void preformConflictPostProcess(Enemy e)
-    {
-        // e.monster.GetComponent<Animator>().Play("Attack");
-        Debug.Log("Hit");
-        // Do SomeThing
-    }
-
-    bool checkConflictWithPlayer(Enemy e, Vector3 enemyPos)
-    {
-        bool result = false;
-
-        float distance = (enemyPos - PlayerManager.instance.playerInstance.transform.position).magnitude;
-
-        if(distance < 0.01)
-        {
-            result = true;
-            preformConflictPostProcess(e);
-        }
-
-        return result;
-    }*/
-
     void Move(Enemy e, int incrementX, int incrementZ)
     {
-        //bool result = checkConflictWithPlayer(e, e.monster.transform.position + new Vector3(incrementX, 0, incrementZ));
-        
-        // Even if conflict with player, still got priority to move to position
-        e.monster.transform.position += new Vector3(incrementX, 0, incrementZ);
-
         Vector3 angles = Vector3.up;
 
         if (incrementX != 0)
@@ -200,9 +175,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
                 Debug.Log("Eat Yougurt!");
                 ++ enemy.EatYogurtCount;
 
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                // Call Yogurt Delete
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                PlayerManager.instance.YogurtDisappear();
 
                 return;
             }
