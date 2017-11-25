@@ -22,7 +22,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     }
 
 
-    public void UpdateAtStep()
+    void Update()
     {
         Debug.Log("Step");
         GetcurrentBehaviourType();
@@ -168,8 +168,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void PutYogurt()
     {
-        GameObject clone = Instantiate(Yogurt, PlayerManager.instance.playerInstance.transform.position, PlayerManager.instance.playerInstance.transform.rotation);
-        PlayerManager.instance.yogurtInstance = clone;
+        PlayerManager.instance.putYogurt();
     }
 
     public void GetNextStep(DungeonMapData getNextStepData)

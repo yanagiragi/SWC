@@ -50,7 +50,7 @@ public class UIManger : ManagerBase<UIManger>
 
 	public void UpdateFoodInfo()
 	{
-        FoodInfo.text = "食物數量 : " + FoodAmount;
+        FoodInfo.text = "食物數量 : ";
     }
 
 	public void OpenThrowUI()
@@ -68,10 +68,10 @@ public class UIManger : ManagerBase<UIManger>
 		}
     }
 
-    public void OpenShopUI()
+    /* public void OpenShopUI()
     {
 
-    }
+    } */
 
     public void AbilityCoolDown(float value)
     {

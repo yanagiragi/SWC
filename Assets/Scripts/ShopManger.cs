@@ -28,7 +28,7 @@ public class ShopManger : ManagerBase<SlimeBehaviourManger>
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
-                UIManger.instance.OpenShopUI();
+                //UIManger.instance.OpenShopUI();
                 ShopIsOpen = true;
             }
         }
