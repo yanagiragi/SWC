@@ -53,7 +53,7 @@ public class EnemyManager : ManagerBase<EnemyManager>
     {
         if (Corrosion.tag == "poison")
         {
-            destroy(monster);
+            Destroy(monster);
         }
     }
 
