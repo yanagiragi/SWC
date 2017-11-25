@@ -12,6 +12,7 @@ public class UIManger : ManagerBase<UIManger>
     [SerializeField] Text FoodInfo;
     [SerializeField] Image ThrowUI;
     [SerializeField] Image CoolDown;
+    [SerializeField] Image HurtEffect;
     static public bool isThrowUIOpen = false;
 
     void Update()
@@ -59,6 +60,18 @@ public class UIManger : ManagerBase<UIManger>
 	{
 		Debug.Log ("UpdateFoodInfo : " + PlayerManager.instance.satiation);
 		FoodInfo.text = "食物數量 : " + PlayerManager.instance.food;
+    }
+
+    public IEnumerator HurtEffectCoroutine()
+    {
+        HurtEffect.color = new Color(HurtEffect.color.r, 0, 0, 0.5f);
+        yield return new WaitForSeconds(0.05f);
+        HurtEffect.color = new Color(HurtEffect.color.r, 0, 0, 0f);
+    }
+
+    public void PlayHurtEffect()
+    {
+        StartCoroutine(HurtEffectCoroutine());
     }
 
 	public void OpenThrowUI()

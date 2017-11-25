@@ -122,6 +122,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     {
 		instance.health = Mathf.Max(instance.health - amount, 0);
 		UIManger.instance.UpdateBloodBar ();
+        UIManger.instance.PlayHurtEffect();
     }
 
 	public static void SetFood(float p_food)
