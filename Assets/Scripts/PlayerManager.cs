@@ -8,9 +8,14 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     public List<int> PlayerItemList = new List<int>();
 
     public GameObject playerInstance;
+    public bool isIdle = true;
+    private bool isEat = false;
+    private bool isDrop = false;
+    private bool isWalk = false;
 
     private Vector3 nextPosition;
     private Vector3 rotationAngles;
+    private Vector3 destination;
 
     public void Awake()
     {
@@ -34,10 +39,68 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         }
     }
 
+    public IEnumerator UpdateAnimatorParameters(string state, bool value)
+    {
+        playerInstance.GetComponent<Animator>().SetBool(state, value);
+        yield return new WaitForEndOfFrame();
+        playerInstance.GetComponent<Animator>().SetBool(state, !value);
+        
+    }
+
     // Called Every Frame
     private void Update()
     {
-        GetNextStepTranslate();
+        if (isIdle)
+        {
+            bool isInteracted = GetInteraction();
+            if (isInteracted)
+            {
+                if (isDrop)
+                {
+                    // Wait until Drop Menu Closed
+                    isEat = isIdle = false;
+
+                    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    // !!!!!!!  DropMenu.Invoked  !!!!!!!!!!!
+                    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                }
+                else if(isEat)
+                {
+                    isDrop = false;
+                }
+
+                //playerInstance.GetComponent<Animator>().SetBool("isEat", isEat);
+                StartCoroutine(UpdateAnimatorParameters("isEat", isEat));
+            }
+            else // Not press interact key, perform walk checking
+            {
+
+                if (playerInstance.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Armature|jump"))
+                {
+                    playerInstance.transform.position = Vector3.Lerp(playerInstance.transform.position, destination, Time.deltaTime);
+                }
+                GetNextStepTranslate();
+            }   
+        }
+    }
+
+    public bool GetInteraction()
+    {
+        bool isInteracted = false;
+
+        if (Input.GetKeyDown(KeyCode.J)) // Eat
+        {
+            isEat = true;
+            isInteracted = true;
+        }
+
+        else if (Input.GetKeyDown(KeyCode.K)) // Drop Item
+        {
+            isDrop = true;
+            isInteracted = true;
+        }
+
+        return isInteracted;
     }
 
     public bool Fuse(Item.ItemType itemType1, Item.ItemType itemType2)
@@ -103,10 +166,21 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         rotationAngles = Vector3.zero;
     }
 
+    IEnumerator LerpPosition()
+    {
+        while (playerInstance.transform.position != destination)
+        {
+            playerInstance.transform.position = Vector3.Lerp(playerInstance.transform.position, destination, Time.deltaTime);
+            yield return null;
+            if(!isWalk)
+                isWalk = false;
+        }
+    }
+
     public void Move()
     {
-        playerInstance.transform.position += nextPosition;
-        nextPosition = Vector3.zero;
+        destination = destination + nextPosition;
+        StartCoroutine(LerpPosition());
     }
 
     public void GetNextStepTranslate()
@@ -140,18 +214,54 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
         if (isPress)
         {
-            // Update Step
-            StepManager.InvokeStep();
+            if (!isWalk)
+            {
+                isWalk = true;
+                playerInstance.GetComponent<Animator>().Play("Armature|jump", -1, 0);
+
+                // Update Step
+                StepManager.InvokeStep();
+            }
         }
-        
+        else
+        {
+            isWalk = false;
+            playerInstance.GetComponent<Animator>().SetBool("isWalk", isWalk);
+        }
     }
 
-    void DropItem(Item.ItemType dropItemType)
+    bool AddItem(Item.ItemType AddItemType)
     {
+        bool result = false;
+
+        if (AddItemType == Item.ItemType.food1 || AddItemType == Item.ItemType.food2 || AddItemType == Item.ItemType.food3)
+        {
+            ++PlayerItemList[(int)AddItemType];
+            result = true;
+        }
+        else
+        {
+            if(PlayerItemList[(int)AddItemType] == 0)
+            {
+                ++PlayerItemList[(int)AddItemType];
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    bool DropItem(Item.ItemType dropItemType)
+    {
+        bool result = false;
+
         if (ItemManager.instance.ItemList[(int)dropItemType].canDrop && PlayerItemList[(int)dropItemType] > 0)
         {
-            PlayerItemList[(int)dropItemType]--;
+            --PlayerItemList[(int)dropItemType];
+            result = true;
         }
+
+        return result;
     }
 
 }
