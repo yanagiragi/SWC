@@ -78,6 +78,14 @@ public class UIManger : ManagerBase<UIManger>
 
     public void AbilityCoolDown()
     {
-        CoolDown.fillAmount = SlimeBehaviourManger.AbilityCoolDown / 5.0f;
+        if (SlimeBehaviourManger.HaveCoolDown)
+        {
+            CoolDown.gameObject.SetActive(false);
+            CoolDown.fillAmount = SlimeBehaviourManger.AbilityCoolDown / 5.0f;
+        }
+        else
+        {
+            CoolDown.gameObject.SetActive(true);
+        }
     }
 }

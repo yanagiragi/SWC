@@ -5,15 +5,16 @@ using UnityEngine;
 
 public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 {
-    //[SerializeField] Item.ItemType currentBehaviourType;
+    [SerializeField] Item.ItemType currentBehaviourType;
     [SerializeField] GameObject bait;
 
     [SerializeField] int BloodIncrease;
     static public int AbilityCoolDown = 0;
     bool isCoolDowm;
-    bool HaveCoolDown = false;
+    public static bool HaveCoolDown = false;
     [SerializeField] int CoolDownTime;
     [SerializeField] int WaterDamage;
+    [SerializeField] GameObject Yogurt;
     Vector2 playerPosition;
 
     void Awake()
@@ -26,14 +27,14 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            currentBehaviourType();
+            //currentBehaviourType();
             if (AbilityCoolDown > 1 && HaveCoolDown)
             {
                 AbilityCoolDown -= 1;
                 isCoolDowm = true;
             }
             DoBehaviourEffect();
-            if (AbilityCoolDown == 0)
+            if (AbilityCoolDown == 0 && HaveCoolDown)
             {
                 isCoolDowm = false;
                 AbilityCoolDown = CoolDownTime;
@@ -43,7 +44,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         }
     }
 
-    Item.ItemType currentBehaviourType()
+    /* Item.ItemType currentBehaviourType()
     {
         if (PlayerManager.instance.PlayerItemList.Contains(1))
         {
@@ -80,7 +81,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
             HaveCoolDown = false;
             return Item.ItemType.empty;
         }
-    }
+    } */
 
     public void UpdatePlayerPosition(Vector3 playerPositionGet)
     {
@@ -90,7 +91,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     void DoBehaviourEffect()
     {
 
-        switch (currentBehaviourType())
+        switch (currentBehaviourType)
         {
             case Item.ItemType.milk:
                 HaveCoolDown = true;
@@ -116,6 +117,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                 break;
             case Item.ItemType.yogurt:
                 HaveCoolDown = true;
+                PutYogurt();
                 break;
         }
     }
@@ -142,7 +144,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         DungeonMapData dungeonMapData = DungeonManager.GetMapData(playerPosition);
         if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.WATER)
         {
-            if (currentBehaviourType() != Item.ItemType.butter)
+            if (currentBehaviourType != Item.ItemType.butter)
             {
                 PlayerManager.DecreaseHealth(WaterDamage);
                 Debug.Log(PlayerManager.instance.health);
@@ -196,15 +198,14 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void PoisonKill()
     {
+        
 
     }
 
-    void PutBait()
+    void PutYogurt()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-
-        }
+        GameObject clone = Instantiate(Yogurt, PlayerManager.instance.playerInstance.transform.position, PlayerManager.instance.playerInstance.transform.rotation);
+        PlayerManager.instance.yogurtInstance = clone;
     }
 
 }
