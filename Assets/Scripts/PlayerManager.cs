@@ -50,7 +50,14 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     {
         if (health <= 0)
         {
-            ; // Preform Death Action
+            if (!GameOverManager.isGameOver)
+            {
+                playerInstance.GetComponent<Animator>().SetTrigger("isDead");
+
+                GameOverManager.isGameOver = true;
+                GameOverManager.GameOver();
+            }
+
             return;
         }
 
@@ -107,6 +114,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
         return isInteracted;
     }
+
 	public void SetSlimeMode(Item.ItemType itemType)
 	{
 		slimeMode = itemType;
@@ -116,6 +124,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
         playerInstance.GetComponentInChildren<SkinnedMeshRenderer>().material = ReplaceMat;
 	}
+
 	public Item.ItemType CheckFuse(Item.ItemType itemType1, Item.ItemType itemType2)
     {
         bool isSuccess = false;
@@ -158,8 +167,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 			Debug.LogWarning("Error occues when fusing : Can't Fuse");
 			return Item.ItemType.empty;
         }
-
-
     }
 
 	public bool Fuse(Item.ItemType itemType1, Item.ItemType itemType2){
