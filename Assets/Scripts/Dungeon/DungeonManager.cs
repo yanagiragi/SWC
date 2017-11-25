@@ -226,6 +226,13 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 
 	Color[] _colors = null;
 	void GenerateObj(){
+		Transform[] _oldTransforms = dungeonTopObj.GetComponentsInChildren<Transform> ();
+
+		int len = _oldTransforms.Length;
+		for (int f = 1; f < len; f++) {
+			Destroy(_oldTransforms [f].gameObject);
+		}
+
 		for (int y = 0; y < mapSize.y; y++) {
 			for (int x = 0; x < mapSize.x; x++) {
 				mapsDatas [x, y].RefrashObj();

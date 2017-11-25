@@ -45,19 +45,19 @@ public class UIManger : ManagerBase<UIManger>
 
     public void UpdateBloodBar()
     {
-		Debug.Log ("UpdateBloodBar : " + PlayerManager.instance.satiation);
+//		Debug.Log ("UpdateBloodBar : " + PlayerManager.instance.satiation);
         bloodBar.fillAmount = PlayerManager.instance.health / 100.0f;
     }
 
 	public void UpdateSatiation()
 	{
-		Debug.Log ("UpdateSatiation : " + PlayerManager.instance.satiation);
+//		Debug.Log ("UpdateSatiation : " + PlayerManager.instance.satiation);
 		satiationBar.fillAmount = PlayerManager.instance.satiation / 1000.0f;
     }
 
 	public void UpdateFoodInfo()
 	{
-		Debug.Log ("UpdateFoodInfo : " + PlayerManager.instance.satiation);
+//		Debug.Log ("UpdateFoodInfo : " + PlayerManager.instance.satiation);
 		FoodInfo.text = "食物數量 : " + PlayerManager.instance.food;
     }
 

@@ -28,7 +28,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     public void UpdateAtStep()
     {
-        Debug.Log("Step");
+//        Debug.Log("Step");
         GetcurrentBehaviourType();
         if (!haveCoolDown)
         {
@@ -144,7 +144,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
             if (currentBehaviourType != Item.ItemType.oil)
             {
                 PlayerManager.DecreaseHealth(WaterDamage);
-                Debug.Log(PlayerManager.instance.health);
+//                Debug.Log(PlayerManager.instance.health);
             }
         }
     }
@@ -208,7 +208,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     public void GetNextStep(DungeonMapData getNextStepData)
     {
-        Debug.Log(getNextStepData);
+//        Debug.Log(getNextStepData);
         nextStepData = getNextStepData;
     }
 

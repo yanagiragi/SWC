@@ -31,7 +31,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     }
 
 	static public void ReStart(){
-		instance.health = 100;
 
 		// enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
 
@@ -47,8 +46,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		instance.isIdle = true;
 
 		instance.SetSlimeMode (Item.ItemType.empty);
-
-		UIManger.instance.UpdateBloodBar ();
+		SetHealth (100);
 		UIManger.instance.UpdateFoodInfo ();
 		UIManger.instance.UpdateSatiation ();
 	}
@@ -398,6 +396,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
                 SlimeBehaviourManger.instance.GetNextStep(_data);
 
                 SlimeBehaviourManger.instance.AcidMeltWall();
+				Rotate();
 
             }
             else
