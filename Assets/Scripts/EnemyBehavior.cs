@@ -17,7 +17,7 @@ public class EnemyBehavior : MonoBehaviour
 
     void Update()//怪物面向史萊姆 離開一定距離(mindist)去追蹤目標物件
     {
-
+        
         if (priority == false)
         {
             Quaternion monsterRotation = Quaternion.LookRotation(sulimo.transform.position - monster.transform.position, Vector3.up);//

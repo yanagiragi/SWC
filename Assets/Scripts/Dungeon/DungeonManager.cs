@@ -8,7 +8,7 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 	const int sizeY = 100;
 
 	/// <summary> 地城大小 </summary>
-	static Vector2 mapSize;
+	public static Vector2 mapSize;
 
 	/// <summary> 地形資料 </summary>
 	[ReorderableList][SerializeField]
