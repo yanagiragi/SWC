@@ -14,10 +14,12 @@ public class UIManger : ManagerBase<UIManger>
     [SerializeField] Image satiationBar;
     [SerializeField] Text FoodInfo;
     [SerializeField] Image ThrowUI;
+    [SerializeField] Image CoolDown;
     static public bool isThrowUIOpen = false;
 
     void Update()
 	{
+        UpdateAtStep();
         if(!isThrowUIOpen)
         {
             PlayerManager.instance.isIdle = true;
@@ -33,6 +35,7 @@ public class UIManger : ManagerBase<UIManger>
 	}
     void UpdateAtStep()
     {
+        AbilityCoolDown();
         UpdateBloodBar();
         UpdateSatiation();
         UpdateFoodInfo();
@@ -40,7 +43,7 @@ public class UIManger : ManagerBase<UIManger>
 
     public void UpdateBloodBar()
     {
-        bloodBar.fillAmount = blood / 100.0f;
+        bloodBar.fillAmount = PlayerManager.instance.health / 100.0f;
     }
 
 	public void UpdateSatiation()
@@ -71,5 +74,10 @@ public class UIManger : ManagerBase<UIManger>
     public void OpenShopUI()
     {
 
+    }
+
+    public void AbilityCoolDown()
+    {
+        CoolDown.fillAmount = SlimeBehaviourManger.AbilityCoolDown / 5.0f;
     }
 }
