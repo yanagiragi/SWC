@@ -130,13 +130,16 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     public static void UpdateAtStep()
     {
+        instance.destination = instance.destination + instance.nextPosition;
+
+        SlimeBehaviourManger.instance.UpdatePlayerPosition(instance.destination);
+
         instance.Move();
         instance.Rotate();
     }
 
     public void Move()
     {
-        destination = destination + nextPosition;
         StartCoroutine(LerpPosition());
 
         bool condition = false;
