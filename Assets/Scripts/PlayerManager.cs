@@ -60,6 +60,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             PlayerItemList[(int)Item.ItemType.yogurt] = 0;
             yogurtInstance.transform.position = playerInstance.transform.position;
             yogurtCount = 0;
+            SetSlimeMode(Item.ItemType.empty);
         }
         else
         {
