@@ -194,25 +194,26 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         {
 			Debug.Log ("gameObject:" + gameObject.GetInstanceID() + " this:" + this.GetInstanceID());
             isPress = true;
-            nextPosition = Vector3.right;
+            
+            nextPosition = Vector3.forward;
             rotationAngles = Vector3.zero * 90f;
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
             isPress = true;
-            nextPosition = Vector3.left;
+            nextPosition = Vector3.back;
             rotationAngles = Vector3.down * 180f;
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
             isPress = true;
-            nextPosition = Vector3.forward;
+            nextPosition = Vector3.left;
             rotationAngles = Vector3.down * 90f;
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
             isPress = true;
-            nextPosition = Vector3.back;
+            nextPosition = Vector3.right;
             rotationAngles = Vector3.up * 90f;
         }
 
