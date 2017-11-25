@@ -17,7 +17,7 @@ public class DungeonMapData {
 	public Item itemData;
 
 	/// <summary> 地圖物件 </summary>
-	public GameObject cubeObj;
+	public CubeObj cubeObj;
 
 	public DungeonMapData(Vector2 p_pos, int p_type, int p_itemType){
 		Init (p_pos, (E_DUNGEON_CUBE_TYPE)p_type, (Item.ItemType)p_itemType);
@@ -27,11 +27,34 @@ public class DungeonMapData {
 	}
 	void Init(Vector2 p_pos, E_DUNGEON_CUBE_TYPE p_type, Item.ItemType p_itemType){
 		pos = p_pos;
+		SetCubeType (p_type);
+		SetCubeType (p_itemType);
+	}
+
+	public void SetCubeType(E_DUNGEON_CUBE_TYPE p_type){
 		cubeType = p_type;
 		cubeData = DungeonManager.GetCubeData (cubeType);
+	}
 
+	public void SetCubeType(Item.ItemType p_itemType){
 		itemType = p_itemType;
 		itemData = ItemManager.GetItemData (itemType);
 	}
 
+	#region"地圖生成"
+	/// <summary> 區域ID </summary>
+	public int groupID = -1;
+	/// <summary> 相鄰區域ID </summary>
+	public List<int> neighborGroupID = new List<int>();
+	public int neighborCount = 0;
+	public void AddNeighbor(int p_id){
+		if (!neighborGroupID.Contains (p_id)) {
+			neighborGroupID.Add (p_id);
+			neighborCount++;
+		}
+	}
+	public static int CompareByNeighborCount(DungeonMapData p_A, DungeonMapData p_B){
+		return p_A.neighborCount.CompareTo (p_B.neighborCount);
+	}
+	#endregion
 }
