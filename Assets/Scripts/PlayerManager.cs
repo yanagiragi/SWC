@@ -21,6 +21,8 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     private bool isWalk = false;
     private bool isEat = false;
 
+    private int yogurtCount = 0;
+
     private Vector3 nextPosition;
     private Vector3 rotationAngles;
     private Vector3 destination;
@@ -73,6 +75,12 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             GetNextStepTranslate();
         }
         
+    }
+
+    public void YogurtDisappear()
+    {
+        instance.yogurtCount = 0;
+        yogurtInstance.transform.position = Vector3.right * -1f;
     }
 
     public static void IncreaseHealth(float amount)
@@ -197,6 +205,17 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     public static void UpdateAtStep()
     {
+        // Check if Yogurt should automatically disppear after few steps
+        if(instance.yogurtInstance.transform.position.x != -1)
+        {
+            if(instance.yogurtCount >= 5)
+            {
+                instance.yogurtCount = 0;
+                instance.YogurtDisappear();
+            }
+            ++instance.yogurtCount;
+        }
+
         instance.destination = instance.destination + instance.nextPosition;
 
         SlimeBehaviourManger.instance.UpdatePlayerPosition(instance.destination);
