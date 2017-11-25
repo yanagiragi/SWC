@@ -18,6 +18,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     int AbilityCoolDown = 0;
     bool isCoolDowm;
     [SerializeField] int CoolDownTime;
+    Vector3 playerPosition;
     //DungeonMapData dungeonMapData;
 
     void Awake()
@@ -43,7 +44,12 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         {
             AbilityCoolDown -= 1; 
         }
-        Debug.Log(DungeonManager.GetMapData(currentGird_x, currentGird_y).cubeType);
+        Debug.Log(DungeonManager.GetMapData(PlayerManager.instance.playerInstance.transform.position).cubeType);
+    }
+
+    public void UpdatePlayerPosition(Vector3 PlayerPosition)
+    {
+        playerPosition = PlayerPosition;
     }
 
     void DoBehaviourEffect()
@@ -79,16 +85,16 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     public void AcidMeltWall()
     {
-        DungeonMapData dungeonMapData = DungeonManager.GetMapData(currentGird_x, currentGird_y);
+        DungeonMapData dungeonMapData = DungeonManager.GetMapData(playerPosition);
         if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.LEN)
         {
             Debug.Log("牆被融化");
         }
     }
 
-    void WalkOnWater()
+    public void WalkOnWater()
     {
-        DungeonMapData dungeonMapData = DungeonManager.GetMapData(currentGird_x, currentGird_y);
+        DungeonMapData dungeonMapData = DungeonManager.GetMapData(playerPosition);
         if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.WATER)
         {
             Debug.Log("可以走過水");
@@ -97,27 +103,43 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void CrossWall()
     {
-
-        if (DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        Vector2 PlayerPositionV2 = new Vector2(playerPosition.x, playerPosition.y);
+        try
         {
-            Debug.Log("玩家移動");
-            return;
+            if (DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(1,1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(1,1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            {
+                Debug.Log("玩家移動");
+                return;
+            }
         }
-        if (DungeonManager.GetMapData(currentGird_x - 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x - 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        catch{}
+        try
         {
-            Debug.Log("玩家移動");
-            return;
+            if (DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(-1,1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(-1,1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            {
+                Debug.Log("玩家移動");
+                return;
+            }
         }
-        if (DungeonManager.GetMapData(currentGird_x + 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        catch{}
+        try
         {
-            Debug.Log("玩家移動");
-            return;
+            if (DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(1,-1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(1,-1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            {
+                Debug.Log("玩家移動");
+                return;
+            }
         }
-        if (DungeonManager.GetMapData(currentGird_x - 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        catch{}
+        try
         {
-            Debug.Log("玩家移動");
-            return;
+            if (DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(-1,-1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(PlayerPositionV2 + new Vector2(-1,-1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            {
+                Debug.Log("玩家移動");
+                return;
+            }
         }
+        catch{}
     }
 
     void PoisonKill()
@@ -129,7 +151,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Instantiate(bait);
+            
         }
     }
 

@@ -7,27 +7,27 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     [ReorderableList]
     public List<int> PlayerItemList = new List<int>();
 
+    public float health = 100;
+
     public GameObject playerInstance;
+    public bool isIdle = true;
+    private bool isDrop = false;
+    private bool isWalk = false;
+    private bool isEat = false;
 
     private Vector3 nextPosition;
     private Vector3 rotationAngles;
+    private Vector3 destination;
 
     public void Awake()
     {
         StepManager.step += PlayerManager.UpdateAtStep;
 
-        // enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
-        /*PlayerItemList.Add(Item.ItemType.empty, 0);
-        PlayerItemList.Add(Item.ItemType.milk, 0);
-        PlayerItemList.Add(Item.ItemType.oil, 0);
-        PlayerItemList.Add(Item.ItemType.butter, 0);
-        PlayerItemList.Add(Item.ItemType.acid, 0);
-        PlayerItemList.Add(Item.ItemType.yogurt, 0);
-        PlayerItemList.Add(Item.ItemType.poison, 0);
-        PlayerItemList.Add(Item.ItemType.food1, 0);
-        PlayerItemList.Add(Item.ItemType.food2, 0);
-        PlayerItemList.Add(Item.ItemType.food3, 0);*/
+        health = 100;
 
+        // enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
+
+        // Init PlayerItemList
         for (int i = 0; i < 10; ++i)
         {
             PlayerItemList.Add(0);
@@ -37,7 +37,61 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     // Called Every Frame
     private void Update()
     {
-        GetNextStepTranslate();
+        if (health <= 0)
+        {
+            ; // Preform Death Action
+            return;
+        }
+
+        bool isInteracted = CheckDropItemAction();
+        if (isInteracted)
+        {
+            // Wait until Drop Menu Closed
+            isIdle = false;
+
+            UIManger.instance.OpenThrowUI();
+        }
+            
+        if (isIdle)
+        {
+                isEat = false;
+                GetNextStepTranslate();
+        }
+        
+    }
+
+    public static void IncreaseHealth(float amount)
+    {
+        if(instance.health < 100)
+        {
+            instance.health += amount;
+        }
+    }
+
+    public static void DecreaseHealth(float amount)
+    {
+        if(instance.health > amount) { 
+            instance.health += amount;
+        }
+    }
+
+    public bool CheckDropItemAction()
+    {
+        bool isInteracted = false;
+
+        if (Input.GetKeyDown(KeyCode.K)) // Drop Item
+        {
+            isDrop = true;
+            isInteracted = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.K)) // Drop Item
+        {
+            isDrop = true;
+            isInteracted = true;
+        }
+
+        return isInteracted;
     }
 
     public bool Fuse(Item.ItemType itemType1, Item.ItemType itemType2)
@@ -93,8 +147,35 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     public static void UpdateAtStep()
     {
+        instance.destination = instance.destination + instance.nextPosition;
+
+        SlimeBehaviourManger.instance.UpdatePlayerPosition(instance.destination);
+
         instance.Move();
         instance.Rotate();
+    }
+
+    public void Move()
+    {
+        StartCoroutine(LerpPosition());
+
+        bool condition = false;
+
+        if (condition) {
+            isEat = true;
+            playerInstance.GetComponent<Animator>().Play("Armature|eat", -1, 0);
+        }
+    }
+
+    IEnumerator LerpPosition()
+    {
+        while (playerInstance.transform.position != destination)
+        {
+            playerInstance.transform.position = Vector3.Lerp(playerInstance.transform.position, destination, Time.deltaTime);
+            yield return null;
+            if (!isWalk)
+                isWalk = false;
+        }
     }
 
     public void Rotate()
@@ -103,11 +184,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         rotationAngles = Vector3.zero;
     }
 
-    public void Move()
-    {
-        playerInstance.transform.position += nextPosition;
-        nextPosition = Vector3.zero;
-    }
 
     public void GetNextStepTranslate()
     {
@@ -140,18 +216,54 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
         if (isPress)
         {
-            // Update Step
-            StepManager.InvokeStep();
+            if (!isWalk)
+            {
+                isWalk = true;
+                playerInstance.GetComponent<Animator>().Play("Armature|jump", -1, 0);
+
+                // Update Step
+                StepManager.InvokeStep();
+            }
         }
-        
+        else
+        {
+            isWalk = false;
+            playerInstance.GetComponent<Animator>().SetBool("isWalk", isWalk);
+        }
     }
 
-    void DropItem(Item.ItemType dropItemType)
+    bool AddItem(Item.ItemType AddItemType)
     {
+        bool result = false;
+
+        if (AddItemType == Item.ItemType.food1 || AddItemType == Item.ItemType.food2 || AddItemType == Item.ItemType.food3)
+        {
+            ++PlayerItemList[(int)AddItemType];
+            result = true;
+        }
+        else
+        {
+            if(PlayerItemList[(int)AddItemType] == 0)
+            {
+                ++PlayerItemList[(int)AddItemType];
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    bool DropItem(Item.ItemType dropItemType)
+    {
+        bool result = false;
+
         if (ItemManager.instance.ItemList[(int)dropItemType].canDrop && PlayerItemList[(int)dropItemType] > 0)
         {
-            PlayerItemList[(int)dropItemType]--;
+            --PlayerItemList[(int)dropItemType];
+            result = true;
         }
+
+        return result;
     }
 
 }
