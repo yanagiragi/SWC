@@ -24,7 +24,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     private Vector3 nextPosition;
     private Vector3 rotationAngles;
-    private Vector3 destination;
+    public Vector3 destination;
 
     public void Awake(){
         //StepManager.step += PlayerManager.UpdateAtStep;
