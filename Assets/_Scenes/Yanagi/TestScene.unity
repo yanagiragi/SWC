@@ -195,7 +195,7 @@ Prefab:
     - target: {fileID: 13700000, guid: 56d3b027ed6128e47a3a170f71dde276, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1f2989e7da033e94cbe9519482d7a16f, type: 2}
+      objectReference: {fileID: 2100000, guid: ec7dcbc82fdccc14197127d915eeb78f, type: 2}
     - target: {fileID: 9500000, guid: 56d3b027ed6128e47a3a170f71dde276, type: 3}
       propertyPath: m_Controller
       value: 
@@ -279,7 +279,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: ec7dcbc82fdccc14197127d915eeb78f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -554,6 +554,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SetAsInstanceBut: SetAsInstance
   PlayerItemList: 
+  health: 100
   playerInstance: {fileID: 711949929}
   isIdle: 1
 --- !u!1 &1699430535
