@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class UIManger : ManagerBase<UIManger>
 {
-
-    [SerializeField] int blood;
     [SerializeField] int Satiation;
     [SerializeField] int FoodAmount;
     [SerializeField] Image bloodBar;
@@ -35,7 +33,6 @@ public class UIManger : ManagerBase<UIManger>
 	}
     void UpdateAtStep()
     {
-        AbilityCoolDown();
         UpdateBloodBar();
         UpdateSatiation();
         UpdateFoodInfo();
@@ -76,16 +73,8 @@ public class UIManger : ManagerBase<UIManger>
 
     }
 
-    public void AbilityCoolDown()
+    public void AbilityCoolDown(float value)
     {
-        if (SlimeBehaviourManger.HaveCoolDown)
-        {
-            CoolDown.gameObject.SetActive(false);
-            CoolDown.fillAmount = SlimeBehaviourManger.AbilityCoolDown / 5.0f;
-        }
-        else
-        {
-            CoolDown.gameObject.SetActive(true);
-        }
+        CoolDown.fillAmount = value;
     }
 }
