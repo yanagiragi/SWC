@@ -22,32 +22,32 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     }
 
 
-    void Update()
+    public void UpdateAtStep()
     {
         Debug.Log("Step");
         GetcurrentBehaviourType();
-            if (!haveCoolDown)
+        if (!haveCoolDown)
+        {
+            DoBehaviourEffect();
+            UIManger.instance.AbilityCoolDown(0);
+        }
+        else
+        {
+            if (abilityCoolDown > 0)
             {
+                UIManger.instance.AbilityCoolDown((float)abilityCoolDown / (float)CoolDownTime);
+                abilityCoolDown -= 1;
+                isCoolDowm = true;
+                    
+            }
+            else if(abilityCoolDown == 0)
+            {
+                isCoolDowm = false;
                 DoBehaviourEffect();
+                abilityCoolDown = CoolDownTime;
                 UIManger.instance.AbilityCoolDown(0);
             }
-            else
-            {
-                if (abilityCoolDown > 0)
-                {
-                    UIManger.instance.AbilityCoolDown((float)abilityCoolDown / (float)CoolDownTime);
-                    abilityCoolDown -= 1;
-                    isCoolDowm = true;
-                    
-                }
-                else if(abilityCoolDown == 0)
-                {
-                    isCoolDowm = false;
-                    DoBehaviourEffect();
-                    abilityCoolDown = CoolDownTime;
-                    UIManger.instance.AbilityCoolDown(0);
-                }
-            }
+        }
     }
 
     void GetcurrentBehaviourType()
@@ -70,7 +70,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                 MilkIncreaseBlood();
                 break;
             case Item.ItemType.acid:
-                AcidMeltWall();
+                //AcidMeltWall();
                 break;
             case Item.ItemType.oil:
                 WalkOnWater();
@@ -100,7 +100,6 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         {
             Debug.Log("AcidMeltWall");
             DungeonManager.ChangeCubeType(nextStepData.pos, E_DUNGEON_CUBE_TYPE.NONE);
-
         }
     }
 
@@ -168,7 +167,10 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void PutYogurt()
     {
-        PlayerManager.instance.putYogurt();
+        if (PlayerManager.instance.PlayerItemList[(int)Item.ItemType.yogurt] > 0)
+        {
+            PlayerManager.instance.putYogurt();
+        }
     }
 
     public void GetNextStep(DungeonMapData getNextStepData)
