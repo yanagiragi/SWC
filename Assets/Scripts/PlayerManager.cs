@@ -148,7 +148,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     void DropItem(Item.ItemType dropItemType)
     {
-        if (PlayerItemList[(int)dropItemType] > 0)
+        if (ItemManager.instance.ItemList[(int)dropItemType].canDrop && PlayerItemList[(int)dropItemType] > 0)
         {
             PlayerItemList[(int)dropItemType]--;
         }
