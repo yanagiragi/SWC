@@ -15,6 +15,10 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     [SerializeField] GameObject Yogurt;
     Vector2 playerPosition;
 
+    public int milkUseLimit = 2; // Actually Can use milkUseLimit + 1 times, then lost
+    public int milkInterval = 5;
+    public int milkCount = 0;
+
     DungeonMapData nextStepData;
 
     void Awake()
@@ -26,28 +30,28 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     {
         Debug.Log("Step");
         GetcurrentBehaviourType();
-            if (!haveCoolDown)
+        if (!haveCoolDown)
+        {
+            DoBehaviourEffect();
+            UIManger.instance.AbilityCoolDown(0);
+        }
+        else
+        {
+            if (abilityCoolDown > 0)
             {
+                UIManger.instance.AbilityCoolDown((float)abilityCoolDown / (float)CoolDownTime);
+                abilityCoolDown -= 1;
+                isCoolDowm = true;
+                    
+            }
+            else if(abilityCoolDown == 0)
+            {
+                isCoolDowm = false;
                 DoBehaviourEffect();
+                abilityCoolDown = CoolDownTime;
                 UIManger.instance.AbilityCoolDown(0);
             }
-            else
-            {
-                if (abilityCoolDown > 0)
-                {
-                    UIManger.instance.AbilityCoolDown((float)abilityCoolDown / (float)CoolDownTime);
-                    abilityCoolDown -= 1;
-                    isCoolDowm = true;
-                    
-                }
-                else if(abilityCoolDown == 0)
-                {
-                    isCoolDowm = false;
-                    DoBehaviourEffect();
-                    abilityCoolDown = CoolDownTime;
-                    UIManger.instance.AbilityCoolDown(0);
-                }
-            }
+        }
     }
 
     void GetcurrentBehaviourType()
@@ -61,16 +65,24 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         playerPosition = new Vector2(Mathf.Round(playerPositionGet.x), Mathf.Round(playerPositionGet.z));
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("Put Yogurt!");
+            PutYogurt();
+        }
+    }
+
     void DoBehaviourEffect()
     {
-
         switch (currentBehaviourType)
         {
             case Item.ItemType.milk:
                 MilkIncreaseBlood();
                 break;
             case Item.ItemType.acid:
-                AcidMeltWall();
+                //AcidMeltWall();
                 break;
             case Item.ItemType.oil:
                 WalkOnWater();
@@ -81,17 +93,38 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                 break;
             case Item.ItemType.poison:
                 if (!isCoolDowm)
-                    PoisonKill();
+                    ;//PoisonKill();
                 break;
             case Item.ItemType.yogurt:
-                PutYogurt();
+                //PutYogurt();
                 break;
         }
+
+       
+
     }
 
     void MilkIncreaseBlood()
     {
-        PlayerManager.IncreaseHealth(BloodIncrease);
+        if (PlayerManager.instance.PlayerItemList[(int)Item.ItemType.milk] > 0)
+        {
+            if (milkCount % milkInterval == 0)
+            {
+                Debug.Log("Increase Health: " + BloodIncrease);
+                PlayerManager.IncreaseHealth(BloodIncrease);
+            }
+
+            if (milkCount >= milkInterval * milkUseLimit)
+            {
+                Debug.Log("Lost Milk!");
+                PlayerManager.instance.PlayerItemList[(int)Item.ItemType.milk] = 0;
+                milkCount = 0;
+                PlayerManager.instance.SetSlimeMode(Item.ItemType.empty);
+                return;
+            }
+
+            ++milkCount;
+        }
     }
 
     public void AcidMeltWall()
@@ -100,7 +133,6 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         {
             Debug.Log("AcidMeltWall");
             DungeonManager.ChangeCubeType(nextStepData.pos, E_DUNGEON_CUBE_TYPE.NONE);
-
         }
     }
 
@@ -168,8 +200,10 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void PutYogurt()
     {
-        GameObject clone = Instantiate(Yogurt, PlayerManager.instance.playerInstance.transform.position, PlayerManager.instance.playerInstance.transform.rotation);
-        PlayerManager.instance.yogurtInstance = clone;
+        if (PlayerManager.instance.PlayerItemList[(int)Item.ItemType.yogurt] > 0)
+        {
+            PlayerManager.instance.putYogurt();
+        }
     }
 
     public void GetNextStep(DungeonMapData getNextStepData)

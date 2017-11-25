@@ -27,7 +27,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     private Vector3 destination;
 
     public void Awake(){
-        StepManager.step += PlayerManager.UpdateAtStep;
+        //StepManager.step += PlayerManager.UpdateAtStep;
     }
 
 	static public void ReStart(){
@@ -55,8 +55,22 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     public void putYogurt()
     {
-        yogurtInstance.transform.position = playerInstance.transform.position;
-        yogurtCount = 0;
+        if (PlayerItemList[(int)Item.ItemType.yogurt] > 0)
+        {
+            PlayerItemList[(int)Item.ItemType.yogurt] = 0;
+            yogurtInstance.transform.position = playerInstance.transform.position;
+            yogurtCount = 0;
+        }
+        else
+        {
+            Debug.LogWarning("Attempt to drop yogurt with ni yogurt at all.");
+        }
+    }
+
+    public void YogurtDisappear()
+    {
+        instance.yogurtCount = 0;
+        yogurtInstance.transform.position = Vector3.right * -1f;
     }
 
     // Called Every Frame
@@ -91,11 +105,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         
     }
 
-    public void YogurtDisappear()
-    {
-        instance.yogurtCount = 0;
-        yogurtInstance.transform.position = Vector3.right * -1f;
-    }
 
 	public static void SetHealth(float p_health)
 	{
@@ -225,6 +234,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		}
 		return false;
 	}
+
     public bool DeFuse(Item.ItemType FusedItemType, Item.ItemType dropItemType)
     {
         bool isSuccess = false;
@@ -363,21 +373,27 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             bool isConflictWithYogurt = (yogurtInstance.transform.position.x != -1 && (yogurtInstance.transform.position - _nextPos).magnitude < 0.01f);
 			DungeonMapData _data = DungeonManager.GetMapData ((int)_nextPos.x, (int)_nextPos.z);
 
-			if (_data.cubeData.canThrough && !isConflictWithYogurt) {
-				if ((_data.itemData.canFuse) && (slimeMode != Item.ItemType.empty)) {
-					Item.ItemType resultType = CheckFuse (slimeMode, _data.itemType);
-					if ((int)resultType > (int)Item.ItemType.poison) {
-						// 吃到全部，不能合成
-					} else {
-						StepManager.InvokeStep ();
-					}
-				}else{
-					StepManager.InvokeStep ();
-				}
+            if (_data.cubeData.canThrough && !isConflictWithYogurt) {
+                if ((_data.itemData.canFuse) && (slimeMode != Item.ItemType.empty)) {
+                    Item.ItemType resultType = CheckFuse(slimeMode, _data.itemType);
+                    if ((int)resultType > (int)Item.ItemType.poison) {
+                        // 吃到全部，不能合成
+                    } else {
+                        StepManager.InvokeStep();
+                    }
+                } else {
+                    StepManager.InvokeStep();
+                }
 
-			} else {
-				Rotate ();
-			}
+            } else if (_data.cubeType == E_DUNGEON_CUBE_TYPE.EARTH && slimeMode == Item.ItemType.acid)
+            {
+                SlimeBehaviourManger.instance.GetNextStep(_data);
+
+                SlimeBehaviourManger.instance.AcidMeltWall();
+
+            } else {
+                Rotate();
+            }
         }
     }
 
