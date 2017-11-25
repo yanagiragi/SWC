@@ -43,7 +43,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         {
             AbilityCoolDown -= 1; 
         }
-        Debug.Log(DungeonManager.GetMapData(currentGird_x, currentGird_y).cubeType);
+        Debug.Log(DungeonManager.GetMapData(PlayerManager.instance.playerInstance.transform.position).cubeType);
     }
 
     void DoBehaviourEffect()
@@ -79,7 +79,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     public void AcidMeltWall()
     {
-        DungeonMapData dungeonMapData = DungeonManager.GetMapData(currentGird_x, currentGird_y);
+        DungeonMapData dungeonMapData = DungeonManager.GetMapData(PlayerManager.instance.playerInstance.transform.position);
         if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.LEN)
         {
             Debug.Log("牆被融化");
@@ -97,27 +97,42 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void CrossWall()
     {
-
-        if (DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        try
         {
-            Debug.Log("玩家移動");
-            return;
+            if (DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            {
+                Debug.Log("玩家移動");
+                return;
+            }
         }
-        if (DungeonManager.GetMapData(currentGird_x - 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x - 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        catch{}
+        try
         {
-            Debug.Log("玩家移動");
-            return;
+            if (DungeonManager.GetMapData(currentGird_x - 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x - 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            {
+                Debug.Log("玩家移動");
+                return;
+            }
         }
-        if (DungeonManager.GetMapData(currentGird_x + 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        catch{}
+        try
         {
-            Debug.Log("玩家移動");
-            return;
+            if (DungeonManager.GetMapData(currentGird_x + 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            {
+                Debug.Log("玩家移動");
+                return;
+            }
         }
-        if (DungeonManager.GetMapData(currentGird_x - 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        catch{}
+        try
         {
-            Debug.Log("玩家移動");
-            return;
+            if (DungeonManager.GetMapData(currentGird_x - 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+            {
+                Debug.Log("玩家移動");
+                return;
+            }
         }
+        catch{}
     }
 
     void PoisonKill()
@@ -129,7 +144,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Instantiate(bait);
+            
         }
     }
 

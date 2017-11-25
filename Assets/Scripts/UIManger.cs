@@ -14,14 +14,22 @@ public class UIManger : ManagerBase<UIManger>
     [SerializeField] Image satiationBar;
     [SerializeField] Text FoodInfo;
     [SerializeField] Image ThrowUI;
-    bool isThrowUIOpen = false;
+    static public bool isThrowUIOpen = false;
 
     void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.C))
+        if(!isThrowUIOpen)
+        {
+            PlayerManager.instance.isIdle = true;
+        }
+		/*if(Input.GetKeyDown(KeyCode.C))
 		{
             OpenThrowUI();
         }
+        if(Input.GetKeyUp(KeyCode.C))
+		{
+            OpenThrowUI();
+        }*/
 	}
     void UpdateAtStep()
     {
@@ -58,5 +66,10 @@ public class UIManger : ManagerBase<UIManger>
 			isThrowUIOpen = false;
             ThrowUI.gameObject.GetComponent<Animator>().SetTrigger("CloseThrowUI");
 		}
+    }
+
+    public void OpenShopUI()
+    {
+
     }
 }

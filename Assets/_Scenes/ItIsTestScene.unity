@@ -385,10 +385,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SetAsInstanceBut: SetAsInstance
-  currentGird_x: 1
+  currentGird_x: 0
   currentGird_y: 0
   PlayerBlood: 100
-  currentBehaviourType: 0
+  currentBehaviourType: 3
   bait: {fileID: 0}
   BloodIncrease: 10
   CoolDownTime: 5

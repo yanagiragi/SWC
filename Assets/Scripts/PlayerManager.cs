@@ -42,26 +42,19 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     // Called Every Frame
     private void Update()
     {
+        bool isInteracted = CheckDropItemAction();
+        if (isInteracted)
+        {
+            // Wait until Drop Menu Closed
+            isIdle = false;
+
+            UIManger.instance.OpenThrowUI();
+        }
+            
         if (isIdle)
         {
-            bool isInteracted = CheckDropItemAction();
-            if (isInteracted)
-            {
-                if (isDrop)
-                {
-                    // Wait until Drop Menu Closed
-                    isIdle = false;
-
-                    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    // !!!!!!!  DropMenu.Invoked  !!!!!!!!!!!
-                    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                }
-            }
-            else // Not press interact key, perform walk checking
-            {
                 isEat = false;
                 GetNextStepTranslate();
-            }   
         }
     }
 
@@ -70,6 +63,12 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         bool isInteracted = false;
 
         if (Input.GetKeyDown(KeyCode.K)) // Drop Item
+        {
+            isDrop = true;
+            isInteracted = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.K)) // Drop Item
         {
             isDrop = true;
             isInteracted = true;
@@ -140,7 +139,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         destination = destination + nextPosition;
         StartCoroutine(LerpPosition());
 
-        bool condition = true;
+        bool condition = false;
 
         if (condition) {
             isEat = true;
