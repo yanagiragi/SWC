@@ -23,5 +23,6 @@ public class StepManager : ManagerBase<StepManager> {
         // Orders are important
         EnemyBehavior.instance.UpdateAtStep();
         PlayerManager.UpdateAtStep();
+        SlimeBehaviourManger.instance.UpdateAtStep();
     }
 }

@@ -15,17 +15,17 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     [SerializeField] GameObject Yogurt;
     Vector2 playerPosition;
 
+    DungeonMapData nextStepData;
+
     void Awake()
     {
     }
 
 
-    void Update()
+    public void UpdateAtStep()
     {
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GetcurrentBehaviourType();
+        Debug.Log("Step");
+        GetcurrentBehaviourType();
             if (!haveCoolDown)
             {
                 DoBehaviourEffect();
@@ -48,49 +48,12 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                     UIManger.instance.AbilityCoolDown(0);
                 }
             }
-
-        }
     }
 
     void GetcurrentBehaviourType()
     {
-        haveCoolDown = true;
-        return;
-        if (PlayerManager.instance.PlayerItemList.Contains(1))
-        {
-            haveCoolDown = true;
-            //currentBehaviourType = Item.ItemType.milk;
-        }
-        else if (PlayerManager.instance.PlayerItemList.Contains(2))
-        {
-            haveCoolDown = false;
-            //currentBehaviourType = Item.ItemType.oil;
-        }
-        else if (PlayerManager.instance.PlayerItemList.Contains(3))
-        {
-            haveCoolDown = true;
-            //currentBehaviourType = Item.ItemType.butter;
-        }
-        else if (PlayerManager.instance.PlayerItemList.Contains(4))
-        {
-            haveCoolDown = true;
-            //currentBehaviourType = Item.ItemType.acid;
-        }
-        else if (PlayerManager.instance.PlayerItemList.Contains(5))
-        {
-            haveCoolDown = true;
-            //currentBehaviourType = Item.ItemType.yogurt;
-        }
-        else if (PlayerManager.instance.PlayerItemList.Contains(6))
-        {
-            haveCoolDown = true;
-            //currentBehaviourType = Item.ItemType.poison;
-        }
-        else
-        {
-            haveCoolDown = false;
-            //currentBehaviourType = Item.ItemType.empty;
-        }
+        haveCoolDown = false;
+        currentBehaviourType = PlayerManager.instance.slimeMode;
     }
 
     public void UpdatePlayerPosition(Vector3 playerPositionGet)
@@ -133,12 +96,10 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     public void AcidMeltWall()
     {
-        DungeonMapData dungeonMapData = DungeonManager.GetMapData(playerPosition);
-        Debug.Log(dungeonMapData.cubeType);
-        if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.EARTH)
+        if (nextStepData.cubeType == E_DUNGEON_CUBE_TYPE.EARTH)
         {
             Debug.Log("AcidMeltWall");
-            DungeonManager.ChangeCubeType(playerPosition, E_DUNGEON_CUBE_TYPE.NONE);
+            DungeonManager.ChangeCubeType(nextStepData.pos, E_DUNGEON_CUBE_TYPE.NONE);
 
         }
     }
@@ -209,6 +170,12 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     {
         GameObject clone = Instantiate(Yogurt, PlayerManager.instance.playerInstance.transform.position, PlayerManager.instance.playerInstance.transform.rotation);
         PlayerManager.instance.yogurtInstance = clone;
+    }
+
+    public void GetNextStep(DungeonMapData getNextStepData)
+    {
+        Debug.Log(getNextStepData);
+        nextStepData = getNextStepData;
     }
 
 }
