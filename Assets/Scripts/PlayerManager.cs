@@ -13,6 +13,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	public float health = 100;
 	public float food = 0;
 	public float satiation = 1000;
+    public float MonsterMinusHealth = 5;
 
 	public float moveSpeed = 1;
 	[LockInInspector]public Item.ItemType slimeMode = Item.ItemType.empty;
@@ -21,6 +22,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     public bool isIdle = true;
 
     private int yogurtCount = 0;
+    private Vector3 lastFramePos;
 
     private Vector3 nextPosition;
     private Vector3 rotationAngles;
@@ -276,23 +278,50 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     }
 
-    public bool checkConflict()
+    public int checkConflict()
     {
-        bool isConflict = false;
+        int isConflict = 0;
+
+        foreach (Enemy enemy in EnemyBehavior.instance.enemyList)
+        {
+            float distance = (destination - enemy.monster.transform.position).magnitude;
+            float distance2 = (destination - enemy.lastFramePos).magnitude + (enemy.monster.transform.position - lastFramePos).magnitude;
+            if (distance < 0.01f)
+            {
+                isConflict = 1;
+                break; // lazy check
+            }
+            if(distance2 < 0.01f)
+            {
+                isConflict = 2;
+                break;// lazy check
+            }
+        }
 
         return isConflict;
     }
 
     public void Move()
     {
-        StartCoroutine(LerpPosition());
+        lastFramePos = playerInstance.transform.position;
 
-        bool condition = checkConflict();
+        int condition = checkConflict();
 
-        /*if (isEat) {
-            playerInstance.GetComponent<Animator>().Play("Armature|eat", -1, 0);
-            isEat = false;
-        }*/
+        if (condition == 1)
+        {
+            destination = playerInstance.transform.position;
+            DecreaseHealth(MonsterMinusHealth);
+        }
+        else if (condition == 2)
+        {
+            // 剛剛好跟怪錯位，扣血但是可以移動
+            DecreaseHealth(MonsterMinusHealth);
+            StartCoroutine(LerpPosition());
+        }
+        else
+        {
+            StartCoroutine(LerpPosition());
+        }
     }
 
 	bool islerping = false;

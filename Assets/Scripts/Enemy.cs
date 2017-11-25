@@ -8,6 +8,7 @@ public class Enemy
     public GameObject monster;
     public int EatYogurtCount = 0;
     public bool isDead = false;
+    public Vector3 lastFramePos;
     
     public Enemy(GameObject mon)
     {

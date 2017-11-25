@@ -26,13 +26,21 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
         }        
     }
 
-    void Start()
+    public void Init()
     {
         enemyList.Clear();
 
         for (int i = 0; i < EnemyAmount; i++)
         {
-            GameObject m = Instantiate(monsterBasePrefab, GetEmptyPos(), transform.rotation);
+            Vector3 pos = GetEmptyPos();
+
+            // For Debug
+            if(i == 0)
+            {
+                pos = new Vector3(52, 0, 52);
+            }
+
+            GameObject m = Instantiate(monsterBasePrefab, pos , transform.rotation);
             enemyList.Add(new Enemy(m));
         }
     }
@@ -42,8 +50,8 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
         // Try 30 times, may need refactor
         for (;;)
         {
-            float x = Mathf.Floor(UnityEngine.Random.value * DungeonManager.mapSize.x);
-            float y = Mathf.Floor(UnityEngine.Random.value * DungeonManager.mapSize.y);
+            float x = Mathf.Floor(UnityEngine.Random.Range(0, DungeonManager.mapSize.x - 1));
+            float y = Mathf.Floor(UnityEngine.Random.Range(0, DungeonManager.mapSize.y - 1));
 
             Vector2 _pos = new Vector2(x, y);
             DungeonMapData _data = DungeonManager.GetMapData(_pos);
@@ -51,7 +59,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             if (_type == E_DUNGEON_CUBE_TYPE.NONE)
             {
                 return new Vector3(_pos.x, 0f, _pos.y);
-            }
+            }            
         }
         return Vector3.zero;
     }
@@ -86,6 +94,10 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
         e.monster.transform.localEulerAngles = angles * 90f;
 
         e.monster.GetComponent<Animator>().Play("metarig|walk", -1, 0);
+
+        e.lastFramePos = e.monster.transform.position;
+
+        e.monster.transform.position = e.monster.transform.position + new Vector3(incrementX, 0, incrementZ);
     }
 
     Vector2 WalkDefault(Vector3 position)

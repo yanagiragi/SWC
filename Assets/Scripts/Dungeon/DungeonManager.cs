@@ -58,7 +58,7 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 				_itemList [f].rate /= _rateSum;
 			}
 		}
-	}
+    }
 
 	/// <summary> 初始化地城 </summary>
 	void InitDungeon () {
@@ -219,12 +219,14 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 			}
 		}
 
-		#endregion
+        #endregion
 
-//		GenerateObjWithColor (_groupID);
-	}
+        //		GenerateObjWithColor (_groupID);
 
-	Color[] _colors = null;
+        EnemyBehavior.instance.Init();
+    }
+
+    Color[] _colors = null;
 	void GenerateObj(){
 		Transform[] _oldTransforms = dungeonTopObj.GetComponentsInChildren<Transform> ();
 
