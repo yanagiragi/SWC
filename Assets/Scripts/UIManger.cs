@@ -14,7 +14,7 @@ public class UIManger : ManagerBase<UIManger>
     [SerializeField] Image satiationBar;
     [SerializeField] Text FoodInfo;
     [SerializeField] Image ThrowUI;
-    bool isThrowUIOpen;
+    bool isThrowUIOpen = false;
 
     void Update()
 	{
@@ -55,6 +55,7 @@ public class UIManger : ManagerBase<UIManger>
         }
 		else
 		{
+			isThrowUIOpen = false;
             ThrowUI.gameObject.GetComponent<Animator>().SetTrigger("CloseThrowUI");
 		}
     }

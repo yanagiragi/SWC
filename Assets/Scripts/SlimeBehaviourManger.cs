@@ -3,20 +3,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class slimeBehaviourManger : ManagerBase<slimeBehaviourManger>
+public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 {
-    Item.ItemType currentBehaviourType;
-	[SerializeField]int bloodIncreaseAmount;
-    [SerializeField]GameObject bait;
+    /*測試用變數 */
+    [SerializeField] int currentGird_x;
+    [SerializeField] int currentGird_y;
+    [SerializeField] int PlayerBlood;
+    /* */
+
+    [SerializeField] Item.ItemType currentBehaviourType;
+    [SerializeField] GameObject bait;
+
+    [SerializeField] int BloodIncrease;
+    int AbilityCoolDown = 0;
+    bool isCoolDowm;
+    [SerializeField] int CoolDownTime;
+    //DungeonMapData dungeonMapData;
+
+    void Awake()
+    {
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            UpdateAtStep();
+        }
+    }
 
     void UpdateAtStep()
     {
-        DoBehaviourEffect();
+        if (AbilityCoolDown == 0)
+        {
+            DoBehaviourEffect();
+            AbilityCoolDown = CoolDownTime;
+        }
+        else
+        {
+            AbilityCoolDown -= 1; 
+        }
+        Debug.Log(DungeonManager.GetMapData(currentGird_x, currentGird_y).cubeType);
     }
 
     void DoBehaviourEffect()
     {
-        switch(currentBehaviourType)
+        
+        switch (currentBehaviourType)
         {
             case Item.ItemType.milk:
                 MilkIncreaseBlood();
@@ -34,28 +67,57 @@ public class slimeBehaviourManger : ManagerBase<slimeBehaviourManger>
                 PoisonKill();
                 break;
             case Item.ItemType.yogurt:
-                
+
                 break;
         }
     }
 
     void MilkIncreaseBlood()
     {
-
+        PlayerBlood += BloodIncrease;
     }
 
-    void AcidMeltWall()
+    public void AcidMeltWall()
     {
-        
+        DungeonMapData dungeonMapData = DungeonManager.GetMapData(currentGird_x, currentGird_y);
+        if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.LEN)
+        {
+            Debug.Log("牆被融化");
+        }
     }
 
     void WalkOnWater()
     {
+        DungeonMapData dungeonMapData = DungeonManager.GetMapData(currentGird_x, currentGird_y);
+        if (dungeonMapData.cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        {
+            Debug.Log("可以走過水");
+        }
     }
 
     void CrossWall()
     {
-        
+
+        if (DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        {
+            Debug.Log("玩家移動");
+            return;
+        }
+        if (DungeonManager.GetMapData(currentGird_x - 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x - 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        {
+            Debug.Log("玩家移動");
+            return;
+        }
+        if (DungeonManager.GetMapData(currentGird_x + 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        {
+            Debug.Log("玩家移動");
+            return;
+        }
+        if (DungeonManager.GetMapData(currentGird_x - 1, currentGird_y - 1).cubeType == E_DUNGEON_CUBE_TYPE.NONE || DungeonManager.GetMapData(currentGird_x + 1, currentGird_y + 1).cubeType == E_DUNGEON_CUBE_TYPE.WATER)
+        {
+            Debug.Log("玩家移動");
+            return;
+        }
     }
 
     void PoisonKill()
