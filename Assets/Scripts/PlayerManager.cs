@@ -9,9 +9,9 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     public GameObject playerInstance;
     public bool isIdle = true;
-    private bool isEat = false;
     private bool isDrop = false;
     private bool isWalk = false;
+    private bool isEat = false;
 
     private Vector3 nextPosition;
     private Vector3 rotationAngles;
@@ -39,62 +39,37 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         }
     }
 
-    public IEnumerator UpdateAnimatorParameters(string state, bool value)
-    {
-        playerInstance.GetComponent<Animator>().SetBool(state, value);
-        yield return new WaitForEndOfFrame();
-        playerInstance.GetComponent<Animator>().SetBool(state, !value);
-        
-    }
-
     // Called Every Frame
     private void Update()
     {
         if (isIdle)
         {
-            bool isInteracted = GetInteraction();
+            bool isInteracted = CheckDropItemAction();
             if (isInteracted)
             {
                 if (isDrop)
                 {
                     // Wait until Drop Menu Closed
-                    isEat = isIdle = false;
+                    isIdle = false;
 
                     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     // !!!!!!!  DropMenu.Invoked  !!!!!!!!!!!
                     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 }
-                else if(isEat)
-                {
-                    isDrop = false;
-                }
-
-                //playerInstance.GetComponent<Animator>().SetBool("isEat", isEat);
-                StartCoroutine(UpdateAnimatorParameters("isEat", isEat));
             }
             else // Not press interact key, perform walk checking
             {
-
-                if (playerInstance.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Armature|jump"))
-                {
-                    playerInstance.transform.position = Vector3.Lerp(playerInstance.transform.position, destination, Time.deltaTime);
-                }
+                isEat = false;
                 GetNextStepTranslate();
             }   
         }
     }
 
-    public bool GetInteraction()
+    public bool CheckDropItemAction()
     {
         bool isInteracted = false;
 
-        if (Input.GetKeyDown(KeyCode.J)) // Eat
-        {
-            isEat = true;
-            isInteracted = true;
-        }
-
-        else if (Input.GetKeyDown(KeyCode.K)) // Drop Item
+        if (Input.GetKeyDown(KeyCode.K)) // Drop Item
         {
             isDrop = true;
             isInteracted = true;
@@ -160,10 +135,17 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         instance.Rotate();
     }
 
-    public void Rotate()
+    public void Move()
     {
-        playerInstance.transform.localEulerAngles = rotationAngles;
-        rotationAngles = Vector3.zero;
+        destination = destination + nextPosition;
+        StartCoroutine(LerpPosition());
+
+        bool condition = true;
+
+        if (condition) {
+            isEat = true;
+            playerInstance.GetComponent<Animator>().Play("Armature|eat", -1, 0);
+        }
     }
 
     IEnumerator LerpPosition()
@@ -172,16 +154,17 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         {
             playerInstance.transform.position = Vector3.Lerp(playerInstance.transform.position, destination, Time.deltaTime);
             yield return null;
-            if(!isWalk)
+            if (!isWalk)
                 isWalk = false;
         }
     }
 
-    public void Move()
+    public void Rotate()
     {
-        destination = destination + nextPosition;
-        StartCoroutine(LerpPosition());
+        playerInstance.transform.localEulerAngles = rotationAngles;
+        rotationAngles = Vector3.zero;
     }
+
 
     public void GetNextStepTranslate()
     {
