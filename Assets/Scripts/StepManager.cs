@@ -14,7 +14,8 @@ public class StepManager : ManagerBase<StepManager> {
 
     public static void InvokeStep()
     {
-        step.Invoke();
+        //step.Invoke();
+        UpdateStep();
     }
 
 
