@@ -11,4 +11,14 @@ public class PlayerManager : MonoBehaviour {
 
     }
 
+    void Walk()
+    {
+        
+    }
+
+    void UseItem(int itemID)
+    {
+
+    }
+
 }
