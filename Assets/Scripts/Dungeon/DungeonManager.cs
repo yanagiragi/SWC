@@ -65,6 +65,7 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 		#region "mapsDatas"
 		int x, y;
 		mapSize = new Vector2 (sizeX, sizeY);
+		homePos = new Vector2 (sizeX/2, sizeY/2);
 		//隨機中央
 		for (y = 1; y < (mapSize.y-1); y++) {
 			for (x = 1; x < (mapSize.x-1); x++) {
@@ -90,33 +91,32 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 		}
 
 		//家
-		Vector2 _centerPos = new Vector2(sizeX/2, sizeY/2);
 		Vector2[] _homePos = new Vector2[]{
-			new Vector2(_centerPos.x - 1, _centerPos.y + 2),
-			new Vector2(_centerPos.x    , _centerPos.y + 2),
-			new Vector2(_centerPos.x + 1, _centerPos.y + 2),
+			new Vector2(homePos.x - 1, homePos.y + 2),
+			new Vector2(homePos.x    , homePos.y + 2),
+			new Vector2(homePos.x + 1, homePos.y + 2),
 
-			new Vector2(_centerPos.x - 2, _centerPos.y + 1),
-			new Vector2(_centerPos.x - 1, _centerPos.y + 1),
-			new Vector2(_centerPos.x    , _centerPos.y + 1),
-			new Vector2(_centerPos.x + 1, _centerPos.y + 1),
-			new Vector2(_centerPos.x + 2, _centerPos.y + 1),
+			new Vector2(homePos.x - 2, homePos.y + 1),
+			new Vector2(homePos.x - 1, homePos.y + 1),
+			new Vector2(homePos.x    , homePos.y + 1),
+			new Vector2(homePos.x + 1, homePos.y + 1),
+			new Vector2(homePos.x + 2, homePos.y + 1),
 
-			new Vector2(_centerPos.x - 2, _centerPos.y    ),
-			new Vector2(_centerPos.x - 1, _centerPos.y    ),
-			new Vector2(_centerPos.x    , _centerPos.y    ),
-			new Vector2(_centerPos.x + 1, _centerPos.y    ),
-			new Vector2(_centerPos.x + 2, _centerPos.y    ),
+			new Vector2(homePos.x - 2, homePos.y    ),
+			new Vector2(homePos.x - 1, homePos.y    ),
+			new Vector2(homePos.x    , homePos.y    ),
+			new Vector2(homePos.x + 1, homePos.y    ),
+			new Vector2(homePos.x + 2, homePos.y    ),
 
-			new Vector2(_centerPos.x - 2, _centerPos.y - 1),
-			new Vector2(_centerPos.x - 1, _centerPos.y - 1),
-			new Vector2(_centerPos.x    , _centerPos.y - 1),
-			new Vector2(_centerPos.x + 1, _centerPos.y - 1),
-			new Vector2(_centerPos.x + 2, _centerPos.y - 1),
+			new Vector2(homePos.x - 2, homePos.y - 1),
+			new Vector2(homePos.x - 1, homePos.y - 1),
+			new Vector2(homePos.x    , homePos.y - 1),
+			new Vector2(homePos.x + 1, homePos.y - 1),
+			new Vector2(homePos.x + 2, homePos.y - 1),
 
-			new Vector2(_centerPos.x - 1, _centerPos.y - 2),
-			new Vector2(_centerPos.x    , _centerPos.y - 2),
-			new Vector2(_centerPos.x + 1, _centerPos.y - 2),
+			new Vector2(homePos.x - 1, homePos.y - 2),
+			new Vector2(homePos.x    , homePos.y - 2),
+			new Vector2(homePos.x + 1, homePos.y - 2),
 		};
 		int len = _homePos.Length;
 		for (int f = 0; f < len; f++) {
@@ -388,10 +388,11 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 
 	void Awake () {
 		InitCubeDatas ();
-		InitDungeon ();
-		GenerateObj ();
 	}
-
+	static public void ReStart(){
+		instance.InitDungeon ();
+		instance.GenerateObj ();
+	}
 	void Start () {
 	}
 

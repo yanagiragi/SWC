@@ -9,6 +9,8 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
     public float health = 100;
 
+	public float moveSpeed = 1;
+	[LockInInspector]public Item.ItemType slimeMode = Item.ItemType.empty;
     public GameObject playerInstance;
     public GameObject yogurtInstance;
     public bool isIdle = true;
@@ -20,20 +22,29 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     private Vector3 rotationAngles;
     private Vector3 destination;
 
-    public void Start()
-    {
+    public void Awake(){
         StepManager.step += PlayerManager.UpdateAtStep;
-
-        health = 100;
-
-        // enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
-
-        // Init PlayerItemList
-        for (int i = 0; i < 10; ++i)
-        {
-            PlayerItemList.Add(0);
-        }
     }
+
+	static public void ReStart(){
+		instance.health = 100;
+
+		// enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
+
+		// Init PlayerItemList
+		instance.PlayerItemList.Clear();
+		for (int i = 0; i < 10; ++i)
+		{
+			instance.PlayerItemList.Add(0);
+		}
+
+		instance.destination = new Vector3 (DungeonManager.homePos.x, 0, DungeonManager.homePos.y);
+		instance.playerInstance.transform.position = instance.destination;
+		instance.isIdle = true;
+		instance.isDrop = false;
+		instance.isWalk = false;
+		instance.isEat = false;
+	}
 
     // Called Every Frame
     private void Update()
@@ -94,39 +105,70 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
         return isInteracted;
     }
-
-    public bool Fuse(Item.ItemType itemType1, Item.ItemType itemType2)
+	public void SetSlimeMode(Item.ItemType itemType)
+	{
+		slimeMode = itemType;
+		Debug.Log ("SetSlimeMode : " + itemType.ToString());
+	}
+	public Item.ItemType CheckFuse(Item.ItemType itemType1, Item.ItemType itemType2)
     {
         bool isSuccess = false;
 
         bool item1CanFuse = ItemManager.instance.ItemList[(int)itemType1].canFuse;
         bool item2CanFuse = ItemManager.instance.ItemList[(int)itemType2].canFuse;
-        bool item1AmmountOverZero = PlayerItemList[(int)itemType1] >= 0;
-        bool item2AmmountOverZero = PlayerItemList[(int)itemType2] >= 0;
 
-        if (item1CanFuse && item2CanFuse && item1AmmountOverZero && item2AmmountOverZero)
+		Item.ItemType resultType = (Item.ItemType)((int)itemType1 | (int)itemType2);
+		if ((int)resultType > (int)Item.ItemType.poison) {
+			Debug.LogError("Error occues when fusing : Over Range");
+			return resultType;
+		}
+
+		bool item1AmmountIsZero = (PlayerItemList[(int)itemType1] <= 0);
+		bool item2AmmountIsZero = (PlayerItemList[(int)itemType2] <= 0);
+		if (item1AmmountIsZero || item2AmmountIsZero) {
+			Debug.LogError("Error occues when fusing : Bad amount");
+			return Item.ItemType.empty;
+		}
+
+        if (item1CanFuse && item2CanFuse)
         {
             if (itemType1 != itemType2)
             {
-                Item.ItemType resultType = (Item.ItemType)((int)itemType1 + (int)itemType2);
-                PlayerItemList[(int)resultType] = 1;
-                PlayerItemList[(int)itemType1] = 0;
-                PlayerItemList[(int)itemType2] = 0;
-                isSuccess = true;
+                if ((resultType != itemType1) && (resultType != itemType2)) {
+					return resultType;
+				} else {
+					Debug.LogError("Error occues when fusing : Already Fuse");
+					return resultType;
+				}
             }
             else
             {
-                Debug.LogError("Error occues when fusing with type");
+                Debug.LogError("Error occues when fusing : Same type");
+				return itemType1;
             }
         }
         else
         {
-            Debug.LogError("Error occues when fusing with amount");
+			Debug.LogError("Error occues when fusing : Can't Fuse");
+			return Item.ItemType.empty;
         }
 
-        return isSuccess;
+
     }
 
+	public bool Fuse(Item.ItemType itemType1, Item.ItemType itemType2){
+		Item.ItemType resultType = CheckFuse (itemType1, itemType2);
+		if ((int)resultType > (int)Item.ItemType.poison) {
+			return false;
+		}else if (resultType != Item.ItemType.empty) {
+			PlayerItemList [(int)resultType] = 1;
+			PlayerItemList [(int)itemType1] = 0;
+			PlayerItemList [(int)itemType2] = 0;
+			SetSlimeMode (resultType);
+			return true;
+		}
+		return false;
+	}
     public bool DeFuse(Item.ItemType FusedItemType, Item.ItemType dropItemType)
     {
         bool isSuccess = false;
@@ -168,15 +210,29 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         }
     }
 
+	bool islerping = false;
     IEnumerator LerpPosition()
     {
-        while (playerInstance.transform.position != destination)
+		islerping = true;
+		while ((playerInstance.transform.position - destination).sqrMagnitude > 0.0001f)
         {
-            playerInstance.transform.position = Vector3.Lerp(playerInstance.transform.position, destination, Time.deltaTime);
+			playerInstance.transform.position = Vector3.MoveTowards(playerInstance.transform.position, destination, moveSpeed * Time.deltaTime);
             yield return null;
-            if (!isWalk)
-                isWalk = false;
+			if (!isWalk) {
+				isWalk = false;
+			}
         }
+		playerInstance.transform.position = destination;
+
+		DungeonMapData _data = DungeonManager.GetMapData ((int)destination.x, (int)destination.z);
+
+		if ((_data.itemType != Item.ItemType.empty)) {
+			AddItem (_data);
+			DungeonManager.ChangeItemType ((int)destination.x, (int)destination.z, Item.ItemType.empty);
+		}
+
+		islerping = false;
+//		Fuse (slimeMode, _data.itemType);
     }
 
     public void Rotate()
@@ -192,7 +248,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         
         if (Input.GetKeyDown(KeyCode.W))
         {
-			Debug.Log ("gameObject:" + gameObject.GetInstanceID() + " this:" + this.GetInstanceID());
             isPress = true;
             nextPosition = Vector3.right;
             rotationAngles = Vector3.zero * 90f;
@@ -220,11 +275,30 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         {
             if (!isWalk)
             {
-                isWalk = true;
-                playerInstance.GetComponent<Animator>().Play("Armature|jump", -1, 0);
+				playerInstance.GetComponent<Animator>().Play("Armature|jump", -1, 0);
 
-                // Update Step
-                StepManager.InvokeStep();
+				Vector3 _nextPos = instance.destination + instance.nextPosition;
+				DungeonMapData _data = DungeonManager.GetMapData ((int)_nextPos.x, (int)_nextPos.z);
+
+				if (_data.cubeData.canThrough) {
+					if ((_data.itemData.canFuse) && (slimeMode != Item.ItemType.empty)) {
+						Item.ItemType resultType = CheckFuse (slimeMode, _data.itemType);
+						if ((int)resultType > (int)Item.ItemType.poison) {
+							// 吃到全部，不能合成
+						} else {
+							isWalk = true;
+							StepManager.InvokeStep ();
+						}
+					}else{
+						isWalk = true;
+						StepManager.InvokeStep ();
+					}
+
+				} else {
+					isWalk = false;
+					playerInstance.GetComponent<Animator>().SetBool("isWalk", isWalk);
+					Rotate ();
+				}
             }
         }
         else
@@ -234,21 +308,27 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         }
     }
 
-    bool AddItem(Item.ItemType AddItemType)
+	bool AddItem(DungeonMapData addItem)
     {
+		Debug.Log ("AddItem : " + addItem.itemType.ToString());
         bool result = false;
-
-        if (AddItemType == Item.ItemType.food1 || AddItemType == Item.ItemType.food2 || AddItemType == Item.ItemType.food3)
+		Item.ItemType _itemType = addItem.itemType;
+		if (_itemType == Item.ItemType.food1 || _itemType == Item.ItemType.food2 || _itemType == Item.ItemType.food3)
         {
-            ++PlayerItemList[(int)AddItemType];
+			++PlayerItemList[(int)_itemType];
             result = true;
         }
         else
         {
-            if(PlayerItemList[(int)AddItemType] == 0)
+			if(PlayerItemList[(int)_itemType] == 0)
             {
-                ++PlayerItemList[(int)AddItemType];
+				++PlayerItemList[(int)_itemType];
                 result = true;
+				if (slimeMode == Item.ItemType.empty) {
+					SetSlimeMode (_itemType);
+				} else {
+					Fuse (slimeMode, _itemType);
+				}
             }
         }
 
