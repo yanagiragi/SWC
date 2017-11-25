@@ -19,7 +19,6 @@ public class ItemManager : ManagerBase<ItemManager> {
         ItemList.Add(new Item(Item.ItemType.food1, false, false));
         ItemList.Add(new Item(Item.ItemType.food2, false, false));
         ItemList.Add(new Item(Item.ItemType.food3, false, false));
-
     }
 
     Item GetItemData(Item.ItemType type)

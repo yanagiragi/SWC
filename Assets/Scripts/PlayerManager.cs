@@ -22,7 +22,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         PlayerItemList.Add(Item.ItemType.food3,  0);
     }
 
-    bool Fuse(Item.ItemType itemType1, Item.ItemType itemType2)
+    public bool Fuse(Item.ItemType itemType1, Item.ItemType itemType2)
     {
         bool isSuccess = false;
 

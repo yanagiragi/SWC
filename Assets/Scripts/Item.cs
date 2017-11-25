@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour {
-
+[System.Serializable]
+public class Item
+{
     public enum ItemType
     {
         empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
