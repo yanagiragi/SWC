@@ -9,5 +9,9 @@ public class GameOverManager : ManagerBase<GameOverManager> {
 	public static void GameOver()
     {
         Debug.Log("GameOver!");
+
+        // After All Done
+
+        RestartManager.ReStart();
     }
 }
