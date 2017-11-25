@@ -7,6 +7,9 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     [ReorderableList]
     public List<int> PlayerItemList = new List<int>();
 
+    [ReorderableList]
+    public List<Material> MaterialMap = new List<Material>();
+
     public float health = 100;
 
 	public float moveSpeed = 1;
@@ -109,6 +112,10 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	{
 		slimeMode = itemType;
 		Debug.Log ("SetSlimeMode : " + itemType.ToString());
+
+        Material ReplaceMat = MaterialMap[(int) itemType];
+
+        playerInstance.GetComponentInChildren<SkinnedMeshRenderer>().material = ReplaceMat;
 	}
 	public Item.ItemType CheckFuse(Item.ItemType itemType1, Item.ItemType itemType2)
     {
@@ -119,14 +126,14 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 		Item.ItemType resultType = (Item.ItemType)((int)itemType1 | (int)itemType2);
 		if ((int)resultType > (int)Item.ItemType.poison) {
-			Debug.LogError("Error occues when fusing : Over Range");
+			Debug.LogWarning("Error occues when fusing : Over Range");
 			return resultType;
 		}
 
 		bool item1AmmountIsZero = (PlayerItemList[(int)itemType1] <= 0);
 		bool item2AmmountIsZero = (PlayerItemList[(int)itemType2] <= 0);
 		if (item1AmmountIsZero || item2AmmountIsZero) {
-			Debug.LogError("Error occues when fusing : Bad amount");
+			Debug.LogWarning("Error occues when fusing : Bad amount");
 			return Item.ItemType.empty;
 		}
 
@@ -137,19 +144,19 @@ public class PlayerManager : ManagerBase<PlayerManager> {
                 if ((resultType != itemType1) && (resultType != itemType2)) {
 					return resultType;
 				} else {
-					Debug.LogError("Error occues when fusing : Already Fuse");
+					Debug.LogWarning("Error occues when fusing : Already Fuse");
 					return resultType;
 				}
             }
             else
             {
-                Debug.LogError("Error occues when fusing : Same type");
+                Debug.LogWarning("Error occues when fusing : Same type");
 				return itemType1;
             }
         }
         else
         {
-			Debug.LogError("Error occues when fusing : Can't Fuse");
+			Debug.LogWarning("Error occues when fusing : Can't Fuse");
 			return Item.ItemType.empty;
         }
 
@@ -182,7 +189,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         }
         else
         {
-            Debug.LogError("Error occues when fusing with amount");
+            Debug.LogWarning("Error occues when fusing with amount");
         }
 
         return isSuccess;
