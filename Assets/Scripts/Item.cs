@@ -12,7 +12,11 @@ public class Item
 
     public ItemType type;
     public bool canFuse;
-    public bool canDrop;
+	public bool canDrop;
+	/// <summary> 道具物件的Prefab </summary>
+	public GameObject objPrefab;
+	/// <summary> 出現率 </summary>
+	public float rate;
     
     public Item(ItemType type, bool canFuse, bool canDrop)
     {

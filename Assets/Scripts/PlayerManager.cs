@@ -20,7 +20,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     private Vector3 rotationAngles;
     private Vector3 destination;
 
-    public void Awake()
+    public void Start()
     {
         StepManager.step += PlayerManager.UpdateAtStep;
 
@@ -55,8 +55,8 @@ public class PlayerManager : ManagerBase<PlayerManager> {
             
         if (isIdle)
         {
-                isEat = false;
-                GetNextStepTranslate();
+            isEat = false;
+            GetNextStepTranslate();
         }
         
     }
@@ -72,7 +72,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     public static void DecreaseHealth(float amount)
     {
         if(instance.health > amount) { 
-            instance.health += amount;
+            instance.health -= amount;
         }
     }
 
@@ -192,6 +192,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         
         if (Input.GetKeyDown(KeyCode.W))
         {
+			Debug.Log ("gameObject:" + gameObject.GetInstanceID() + " this:" + this.GetInstanceID());
             isPress = true;
             nextPosition = Vector3.right;
             rotationAngles = Vector3.zero * 90f;

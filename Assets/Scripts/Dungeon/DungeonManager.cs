@@ -10,13 +10,16 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 	/// <summary> 地城大小 </summary>
 	public static Vector2 mapSize;
 
+	/// <summary> 家位置 </summary>
+	public static Vector2 homePos;
+
 	/// <summary> 地形資料 </summary>
 	[ReorderableList][SerializeField]
 	DungeonCubeData[] cubeDatas;
 
-	/// <summary> 能在地城中出現的道具 </summary>
-	[SerializeField]
-	Item.ItemType[] itemsInDungeon;
+//	/// <summary> 能在地城中出現的道具 </summary>
+//	[SerializeField]
+//	Item.ItemType[] itemsInDungeon;
 
 	/// <summary> 地城格子種類 </summary>
 	static DungeonMapData[,] mapsDatas = new DungeonMapData[sizeX, sizeY];
@@ -40,6 +43,21 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 				cubeDatas [f].rate /= _rateSum;
 			}
 		}
+
+		List<Item> _itemList = ItemManager.instance.ItemList;
+		len = _itemList.Count;
+		_rateSum = 0;
+		for (int f = 0; f < len; f++) {
+			if (_itemList [f].rate >= 0) {
+				_rateSum += _itemList [f].rate;
+				_itemList [f].rate = _rateSum;
+			}
+		}
+		for (int f = 0; f < len; f++) {
+			if (_itemList [f].rate >= 0) {
+				_itemList [f].rate /= _rateSum;
+			}
+		}
 	}
 
 	/// <summary> 初始化地城 </summary>
@@ -48,13 +66,12 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 		int x, y;
 		mapSize = new Vector2 (sizeX, sizeY);
 		//隨機中央
-		int _itemCount = itemsInDungeon.Length;
 		for (y = 1; y < (mapSize.y-1); y++) {
 			for (x = 1; x < (mapSize.x-1); x++) {
 				E_DUNGEON_CUBE_TYPE _cubeType = GetRandomCubeType();
 				Item.ItemType _itemType = Item.ItemType.empty;
 				if (_cubeType == E_DUNGEON_CUBE_TYPE.NONE) {
-					_itemType = itemsInDungeon[Random.Range (0, _itemCount)];
+					_itemType = GetRandomItemType();
 				}
 				mapsDatas [x, y] = new DungeonMapData(new Vector2(x, y), _cubeType, _itemType);
 			}
@@ -283,6 +300,20 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 		}
 		return E_DUNGEON_CUBE_TYPE.NONE;
 	}
+
+	Item.ItemType GetRandomItemType(){
+		List<Item> _itemList = ItemManager.instance.ItemList;
+		float _random = Random.value;
+		int len = _itemList.Count;
+		for (int f = 0; f < len; f++) {
+			if (_itemList [f].rate >= 0) {
+				if (_random <= _itemList [f].rate) {
+					return _itemList [f].type;
+				}
+			}
+		}
+		return Item.ItemType.empty;
+	}
 #endregion
 
 #region "取資料"
@@ -330,9 +361,29 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 		_mapData.SetCubeType (p_type);
 		_mapData.RefrashObj ();
 	}
-	[Button]public string changeCubeTypeTestBut = "ChangeCubeTypeTest";
-	public void ChangeCubeTypeTest(){
-		ChangeCubeType (Random.Range(0, 100), Random.Range(0, 100), E_DUNGEON_CUBE_TYPE.NONE);
+
+	/// <summary>
+	/// 改變 p_pos 位置的道具種類
+	/// </summary>
+	static public void ChangeItemType(Vector2 p_pos, Item.ItemType p_type){
+		ChangeItemType ((int)p_pos.x, (int)p_pos.y, p_type);
+	}
+
+	/// <summary>
+	/// 改變 p_x, p_y 位置的道具種類
+	/// </summary>
+	static public void ChangeItemType(int p_x, int p_y, Item.ItemType p_type){
+		DungeonMapData _mapData = mapsDatas[p_x, p_y];
+		_mapData.SetItemType (p_type);
+		_mapData.RefrashObj ();
+	}
+
+	[Button]public string changeTypeTestBut = "ChangeTypeTest";
+	public void ChangeTypeTest(){
+		for (int f = 0; f < 200; f++) {
+			ChangeCubeType (Random.Range (0, 100), Random.Range (0, 100), GetRandomCubeType ());
+			ChangeItemType (Random.Range (0, 100), Random.Range (0, 100), GetRandomItemType ());
+		}
 	}
 
 	void Awake () {
@@ -345,6 +396,6 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 	}
 
 	void Update () {
-		
+//		ChangeTypeTest ();
 	}
 }

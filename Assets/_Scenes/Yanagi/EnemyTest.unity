@@ -260,21 +260,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SetAsInstanceBut: SetAsInstance
   cubeDatas:
-  - cubePrefab: {fileID: 1797925306875156, guid: 7bf7f61d73fe1754d8d12e02d7d8a552,
+  - cubePrefab: {fileID: 1797925306875156, guid: 53c825511cb81484fb651d43ee02a71c,
       type: 2}
     type: 0
-    rate: 0
-    canThrough: 0
-  - cubePrefab: {fileID: 1405640680625430, guid: 4a5a93bf56fe9964788e47d6ca167bf5,
+    rate: -1
+    canThrough: 1
+  - cubePrefab: {fileID: 1797925306875156, guid: 7bf7f61d73fe1754d8d12e02d7d8a552,
       type: 2}
     type: 1
-    rate: 0
+    rate: 10
+    canThrough: 1
+  - cubePrefab: {fileID: 1405640680625430, guid: 4a5a93bf56fe9964788e47d6ca167bf5,
+      type: 2}
+    type: 2
+    rate: 10
+    canThrough: 0
+  - cubePrefab: {fileID: 1405640680625430, guid: d450dddd92bd4964abcdb16cd6f05a78,
+      type: 2}
+    type: 3
+    rate: 1
     canThrough: 0
   - cubePrefab: {fileID: 1073518672695592, guid: 90f95c3014374bc4cb50c463de1bf809,
       type: 2}
-    type: 2
-    rate: 0
-    canThrough: 0
+    type: 4
+    rate: 1
+    canThrough: 1
+  - cubePrefab: {fileID: 1797925306875156, guid: 1d2b5fa010b02ff4bbdf42c9e6e5367c,
+      type: 2}
+    type: 5
+    rate: 1
+    canThrough: 1
   itemsInDungeon: 000000000000000000000000010000000200000004000000
   dungeonTopObj: {fileID: 1493664495}
   changeCubeTypeTestBut: ChangeCubeTypeTest
@@ -733,13 +748,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SetAsInstanceBut: SetAsInstance
-  monster: {fileID: 448328776}
-  sulimo: {fileID: 0}
-  mindist: 1
-  move: 1
-  attack: {fileID: 0}
-  monstermove: {fileID: 0}
+  monsterBasePrefab: {fileID: 0}
   enemyList: []
+  randomIndex: 
 --- !u!1 &2034853339
 GameObject:
   m_ObjectHideFlags: 0
