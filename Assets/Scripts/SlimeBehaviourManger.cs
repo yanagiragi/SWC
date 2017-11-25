@@ -61,9 +61,17 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         playerPosition = new Vector2(Mathf.Round(playerPositionGet.x), Mathf.Round(playerPositionGet.z));
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Debug.Log("Put Yogurt!");
+            PutYogurt();
+        }
+    }
+
     void DoBehaviourEffect()
     {
-
         switch (currentBehaviourType)
         {
             case Item.ItemType.milk:
@@ -81,12 +89,15 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                 break;
             case Item.ItemType.poison:
                 if (!isCoolDowm)
-                    PoisonKill();
+                    ;//PoisonKill();
                 break;
             case Item.ItemType.yogurt:
-                PutYogurt();
+                //PutYogurt();
                 break;
         }
+
+       
+
     }
 
     void MilkIncreaseBlood()
