@@ -15,6 +15,10 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     [SerializeField] GameObject Yogurt;
     Vector2 playerPosition;
 
+    public int milkUseLimit = 2; // Actually Can use milkUseLimit + 1 times, then lost
+    public int milkInterval = 5;
+    public int milkCount = 0;
+
     DungeonMapData nextStepData;
 
     void Awake()
@@ -102,7 +106,25 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void MilkIncreaseBlood()
     {
-        PlayerManager.IncreaseHealth(BloodIncrease);
+        if (PlayerManager.instance.PlayerItemList[(int)Item.ItemType.milk] > 0)
+        {
+            if (milkCount % milkInterval == 0)
+            {
+                Debug.Log("Increase Health: " + BloodIncrease);
+                PlayerManager.IncreaseHealth(BloodIncrease);
+            }
+
+            if (milkCount >= milkInterval * milkUseLimit)
+            {
+                Debug.Log("Lost Milk!");
+                PlayerManager.instance.PlayerItemList[(int)Item.ItemType.milk] = 0;
+                milkCount = 0;
+                PlayerManager.instance.SetSlimeMode(Item.ItemType.empty);
+                return;
+            }
+
+            ++milkCount;
+        }
     }
 
     public void AcidMeltWall()
