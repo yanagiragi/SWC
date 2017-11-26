@@ -18,7 +18,8 @@ public class UIManger : ManagerBase<UIManger>
 	[SerializeField] Image GameOverEffect;
 	[SerializeField] Image ChangeMapEffect;
 	[SerializeField] Image ArrawImage;
-    [SerializeField] Text SystemText;
+	[SerializeField] Text SystemText;
+    [SerializeField] Text StepText;
     static public bool isThrowUIOpen = false;
     static public bool isSystemTextOpen = false;
 
@@ -150,5 +151,11 @@ public class UIManger : ManagerBase<UIManger>
 
 	public static void ChangeMapDone(){
 		instance.ChangeMapEffect.gameObject.SetActive (false);
+	}
+
+	public void UpdateStepText()
+	{
+		//		Debug.Log ("UpdateFoodInfo : " + PlayerManager.instance.satiation);
+		StepText.text = "步數：" + StepManager.instance.stepCount;
 	}
 }
