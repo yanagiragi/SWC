@@ -376,7 +376,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
     {
         bool isConflict = false;
 
-        if(
+        /*if(
             (destination.x == 48 && destination.z == 50) ||
             (destination.x == 48 && destination.z == 51) ||
             (destination.x == 49 && destination.z == 51) ||
@@ -387,7 +387,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         )
         {
             isConflict = true;
-        }
+        }*/
 
         return isConflict;
     }
