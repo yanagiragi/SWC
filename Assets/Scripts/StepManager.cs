@@ -11,6 +11,7 @@ public class StepManager : ManagerBase<StepManager> {
     public static void ReStart()
     {
         instance.stepCount = 0;
+		EnemyBehavior.instance.UpdateAtStep();
     }
 
     private void Awake()
@@ -28,6 +29,7 @@ public class StepManager : ManagerBase<StepManager> {
     public static void UpdateStep()
     {
         ++instance.stepCount;
+		UIManger.instance.UpdateStepText ();
         // Orders are important
         EnemyBehavior.instance.UpdateAtStep();
         PlayerManager.UpdateAtStep();
