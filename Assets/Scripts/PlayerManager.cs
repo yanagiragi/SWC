@@ -146,13 +146,12 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 	public static void IncreaseSatiation(float amount)
 	{
-		instance.satiation = Mathf.Clamp(instance.satiation + amount, 0, 1000);
+        instance.satiation = Mathf.Clamp(instance.satiation + amount, 0, 1000);
 		UIManger.instance.UpdateSatiation ();
-	}
+    }
 
 	public void CheckDropItemAction()
 	{
-
 		Item _item = ItemManager.GetItemData (slimeMode);
 
 		switch (_item.fuseLevel) {
@@ -360,7 +359,16 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 		int condition = checkConflict();
 
-		if (condition == 1)
+        // Check Sys Text
+        DungeonMapData data1 = DungeonManager.GetMapData(new Vector2(PlayerManager.instance.playerInstance.transform.position.x, PlayerManager.instance.playerInstance.transform.position.z));
+        DungeonMapData data2 = DungeonManager.GetMapData(new Vector2(instance.destination.x, PlayerManager.instance.destination.z));
+
+        if (data1.cubeType != E_DUNGEON_CUBE_TYPE.HOME && data2.cubeType == E_DUNGEON_CUBE_TYPE.HOME && !UIManger.isSystemTextOpen)
+        {
+            UIManger.instance.ShowSystemText();
+        }
+
+        if (condition == 1)
 		{
 			destination = playerInstance.transform.position;
 			DecreaseHealth(MonsterMinusHealth);
