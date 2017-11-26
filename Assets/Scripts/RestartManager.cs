@@ -15,7 +15,9 @@ public class RestartManager : ManagerBase<RestartManager> {
 		DungeonManager.ReStart ();
 		PlayerManager.ReStart ();
         StepManager.ReStart();
-	}
+        PlayerManager.instance.keyQueue.Clear();
+        UIManger.instance.UpdateStepText();
+    }
 
 	static public void ChangeMap(){
 		DungeonManager.ChangeMap ();
