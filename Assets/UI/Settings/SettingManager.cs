@@ -21,7 +21,13 @@ public class SettingManager : MonoBehaviour {
 	public AudioSource musicSource;
 	public Resolution[] resolutions;
 	public GameSettings gamesettings;
-
+	void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.O))
+		{
+			menu.SetActive (true);
+		}
+	}
 
 	void OnEnable()
 	{
