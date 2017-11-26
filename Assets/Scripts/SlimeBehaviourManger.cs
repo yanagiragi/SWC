@@ -78,15 +78,21 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         playerPosition = new Vector2(Mathf.Round(playerPositionGet.x), Mathf.Round(playerPositionGet.z));
     }
 
+    public void UpdatePlayerPositionRT()
+    {
+        playerPosition = new Vector2(Mathf.Round(PlayerManager.instance.playerInstance.transform.position.x), Mathf.Round(PlayerManager.instance.playerInstance.transform.position.z));
+    }
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        UpdatePlayerPositionRT();
+        if (Input.GetKeyDown(KeyCode.J) && currentBehaviourType == Item.ItemType.yogurt)
         {
             Debug.Log("Put Yogurt!");
             PutYogurt();
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && currentBehaviourType == Item.ItemType.butter && isCoolDowm == false)
+        if (currentBehaviourType == Item.ItemType.butter && isCoolDowm == false)
         {
             CrossWall();
         }
@@ -150,7 +156,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     public void WalkOnWater()
     {
         //DungeonMapData dungeonMapData = DungeonManager.GetMapData(playerPosition);
-        if(nextStepData == null)
+        if (nextStepData == null)
         {
             ;
         }
@@ -166,8 +172,31 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void CrossWall()
     {
-        try
+        int Count = 0;
+        if (DungeonManager.GetMapData(playerPosition + new Vector2(0, 1)).cubeType == E_DUNGEON_CUBE_TYPE.WALL ||
+        DungeonManager.GetMapData(playerPosition + new Vector2(0, 1)).cubeType == E_DUNGEON_CUBE_TYPE.EARTH)
         {
+            Count++;
+        }
+
+        if (DungeonManager.GetMapData(playerPosition + new Vector2(0, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WALL ||
+DungeonManager.GetMapData(playerPosition + new Vector2(0, -1)).cubeType == E_DUNGEON_CUBE_TYPE.EARTH)
+        {
+            Count++;
+        }
+        if (DungeonManager.GetMapData(playerPosition + new Vector2(1, 0)).cubeType == E_DUNGEON_CUBE_TYPE.WALL ||
+DungeonManager.GetMapData(playerPosition + new Vector2(1, 0)).cubeType == E_DUNGEON_CUBE_TYPE.EARTH)
+        {
+            Count++;
+        }
+        if (DungeonManager.GetMapData(playerPosition + new Vector2(-1, 0)).cubeType == E_DUNGEON_CUBE_TYPE.WALL ||
+DungeonManager.GetMapData(playerPosition + new Vector2(-1, 0)).cubeType == E_DUNGEON_CUBE_TYPE.EARTH)
+        {
+            Count++;
+        }
+        if (Input.GetKeyDown(KeyCode.J) && Count > 1)
+        {
+            Debug.Log(playerPosition);
             if (DungeonManager.GetMapData(playerPosition + new Vector2(1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
             DungeonManager.GetMapData(playerPosition + new Vector2(1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER ||
             DungeonManager.GetMapData(playerPosition + new Vector2(1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
@@ -180,15 +209,11 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                     return;
                 }
             }
-        }
-        catch { }
-        try
-        {
+
             if (DungeonManager.GetMapData(playerPosition + new Vector2(-1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
             DungeonManager.GetMapData(playerPosition + new Vector2(-1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER ||
-            DungeonManager.GetMapData(playerPosition + new Vector2(-1, 11)).cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
+            DungeonManager.GetMapData(playerPosition + new Vector2(-1, 1)).cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
             {
-                Debug.Log(DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType);
                 if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.W))
                 {
                     PlayerManager.instance.destination += new Vector3(-1, 0, 1);
@@ -197,12 +222,11 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                     return;
                 }
             }
-        }
-        catch { }
-        try
-        {
+
+
+
             if (DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
-            DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER|| 
+            DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER ||
             DungeonManager.GetMapData(playerPosition + new Vector2(1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
             {
                 if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.S))
@@ -213,15 +237,12 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                     return;
                 }
             }
-        }
-        catch { }
-        try
-        {
+
+
             if (DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.NONE ||
             DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.WATER ||
             DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
             {
-                Debug.Log(DungeonManager.GetMapData(playerPosition + new Vector2(-1, -1)).cubeType);
                 if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.S))
                 {
                     PlayerManager.instance.destination += new Vector3(-1, 0, -1);
@@ -231,7 +252,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
                 }
             }
         }
-        catch { }
+
     }
 
     void PoisonKill()
