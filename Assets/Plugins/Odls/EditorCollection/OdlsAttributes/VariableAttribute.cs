@@ -334,13 +334,15 @@ public class CheckDrawer : PropertyDrawer {
 #endregion
 
 #region "[CopyPaste] = 複製貼上按鈕"
-public class CopyPasteAttribute : PropertyAttribute  {	
-	public static SerializedProperty sourceSerializedProperty = null;
+public class CopyPasteAttribute : PropertyAttribute  {
+    #if UNITY_EDITOR
+    public static SerializedProperty sourceSerializedProperty = null;
 	public static object propertyObj = null;
 	public static string propertyPath = "";
 
 	public static bool isArray = false;
 	public CopyPasteAttribute() {}
+    #endif
 }
 #if UNITY_EDITOR
 [CustomPropertyDrawer (typeof (CopyPasteAttribute))]
