@@ -7,7 +7,9 @@ public class RestartManager : ManagerBase<RestartManager> {
 		ReStart ();
 	}
 	void Update () {
-		
+		if(Input.GetKeyDown(KeyCode.F1)){
+			ReStart ();
+		}
 	}
 	static public void ReStart(){
 		DungeonManager.ReStart ();
