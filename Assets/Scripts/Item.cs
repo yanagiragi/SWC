@@ -18,6 +18,8 @@ public class Item
 	}
 	public bool canDrop;
 	/// <summary> 融合階層 </summary>
+	public bool foodorNo;
+	/// <summary> 食物階層 </summary>
 	public int fuseLevel;
 	/// <summary> 道具物件的Prefab </summary>
 	public GameObject objPrefab;
@@ -28,11 +30,12 @@ public class Item
 	/// <summary> 增加飽食 </summary>
 	public float satiation;
 
-    public Item(ItemType type, bool canFuse, bool canDrop)
+	public Item(ItemType type, bool canFuse, bool canDrop,bool foodorNo )
     {
         this.type = type;
 //        this.canFuse = canFuse;
         this.canDrop = canDrop;
+		this.foodorNo = foodorNo;
     }
 
     ~Item()
