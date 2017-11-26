@@ -18,10 +18,16 @@ public class SettingManager : MonoBehaviour {
 	public Button applybutton;
 	public GameObject menu;
 
-	public AudioSource musicSource;
+	public AudioSource musicSource,musicSource1;
 	public Resolution[] resolutions;
 	public GameSettings gamesettings;
-
+	void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.O))
+		{
+			menu.SetActive (true);
+		}
+	}
 
 	void OnEnable()
 	{
@@ -68,7 +74,7 @@ public class SettingManager : MonoBehaviour {
 	}
 	public void OnMusicVolumeChange()
 	{
-		musicSource.volume =gamesettings.Musicvolume =musicvolumeSlider.value;
+		musicSource1.volume=musicSource.volume =gamesettings.Musicvolume =musicvolumeSlider.value;
 	}
 	public void OnApplyButtonClick()
 	{

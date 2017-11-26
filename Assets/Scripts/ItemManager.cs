@@ -24,7 +24,7 @@ public class ItemManager : ManagerBase<ItemManager> {
     public static Item GetItemData(Item.ItemType type)
     {
         return ItemManager.instance.ItemList[(int)type];
-	
+
 	}
 
 }
