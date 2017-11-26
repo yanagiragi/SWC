@@ -6,8 +6,8 @@ public class SoundManager: ManagerBase<SoundManager>
 {
 
 	public AudioClip water,slimestep,acidDestroy,swallow,teleport,fire;
-	AudioSource audiosource;
-	public GameObject Slime;
+	private AudioSource audiosource;
+	private GameObject Slime;
 
 	void Start()
 	{
