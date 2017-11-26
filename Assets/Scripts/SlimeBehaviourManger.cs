@@ -15,7 +15,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     [SerializeField] GameObject Yogurt;
     Vector2 playerPosition;
 
-    public int milkUseLimit = 2; // Actually Can use milkUseLimit + 1 times, then lost
+    public int milkUseLimit = 5; // Actually Can use milkUseLimit + 1 times, then lost
     public int milkInterval = 5;
     public int milkCount = 0;
     public int trapMinusHealth = 5;
@@ -35,7 +35,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     public void UpdateAtStep()
     {
-        Debug.Log("Step");
+        //Debug.Log("Step");
         GetcurrentBehaviourType();
         if (!haveCoolDown)
         {

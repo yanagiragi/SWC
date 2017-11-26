@@ -1326,7 +1326,7 @@ MonoBehaviour:
     type: 2}
   enemyList: []
   randomIndex: 
-  EnemyAmount: 2
+  EnemyAmount: 30
 --- !u!1 &1748389699
 GameObject:
   m_ObjectHideFlags: 0

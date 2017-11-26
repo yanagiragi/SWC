@@ -182,7 +182,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
 
             bool isContact = checkContactYogurt(enemy);
 
-            if (isContact && enemy.EatYogurtCount <= 5)
+            if (isContact && enemy.EatYogurtCount <= 15)
             {
                 Debug.Log("Eat Yougurt!");
                 ++ enemy.EatYogurtCount;
@@ -191,7 +191,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
 
                 return;
             }
-            else if(enemy.EatYogurtCount == 6)
+            else if(enemy.EatYogurtCount == 16)
             {
                 // Free to go, let go of yogurt's trap!
                 enemy.EatYogurtCount = 0;

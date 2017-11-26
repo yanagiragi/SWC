@@ -325,7 +325,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		// Check if Yogurt should automatically disppear after few steps
 		if(instance.yogurtInstance.transform.position.x != -9999)
 		{
-			if(instance.yogurtCount >= 5)
+			if(instance.yogurtCount >= 15)
 			{
 				instance.yogurtCount = 0;
 				instance.YogurtDisappear();
