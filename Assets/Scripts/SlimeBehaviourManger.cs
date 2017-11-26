@@ -157,6 +157,8 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
             Debug.Log("AcidMeltWall");
 			SoundManager.instance.do_acidDestroy ();
             DungeonManager.ChangeCubeType(nextStepData.pos, E_DUNGEON_CUBE_TYPE.NONE);
+			ParticleManager.ShowParticle ((int)nextStepData.pos.x, (int)nextStepData.pos.y, E_PARTICLE_TYPE.ROCK);
+
         }
     }
 

@@ -223,6 +223,12 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 	public void SetSlimeMode(Item.ItemType itemType)
 	{
+		if(slimeMode == itemType){
+			return;
+		}
+
+		ParticleManager.ShowParticle ((int)destination.x, (int)destination.z, E_PARTICLE_TYPE.ADD);
+
 		slimeMode = itemType;
 		Debug.Log ("SetSlimeMode : " + itemType.ToString());
 
@@ -435,11 +441,14 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		{
 			destination = playerInstance.transform.position;
 			DecreaseHealth(MonsterMinusHealth);
+			ParticleManager.ShowParticle ((int)destination.x, (int)destination.z, E_PARTICLE_TYPE.HIT);
+
 		}
 		else if (condition == 2)
 		{
 			// 剛剛好跟怪錯位，扣血但是可以移動
 			DecreaseHealth(MonsterMinusHealth);
+			ParticleManager.ShowParticle ((int)destination.x, (int)destination.z, E_PARTICLE_TYPE.HIT);
 			StartCoroutine(LerpPosition());
 		}
 		else if(condition == 0 || condition == 3)
@@ -481,6 +490,11 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 			}
 			CameraManager.instance.cmrAnimator.SetBool ("inHome", true);
 		} else {
+
+			if (_data.cubeType == E_DUNGEON_CUBE_TYPE.WATER) {
+				ParticleManager.ShowParticle ((int)destination.x, (int)destination.z, E_PARTICLE_TYPE.WATER);
+			}
+
 			CameraManager.instance.cmrAnimator.SetBool ("inHome", false);
 			IncreaseSatiation (-1f);
 		}
