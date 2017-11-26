@@ -18,16 +18,21 @@ public class UIManger : ManagerBase<UIManger>
 	[SerializeField] Image GameOverEffect;
     [SerializeField] Text SystemText;
     static public bool isThrowUIOpen = false;
+    static public bool isSystemTextOpen = false;
 
     public IEnumerator ShowSystemTextCoRoutine()
     {
-        instance.SystemText.enabled = true;
+        instance.SystemText.gameObject.SetActive(true);
         yield return new WaitForSeconds(1f);
-        instance.SystemText.enabled = false;
+        instance.SystemText.gameObject.SetActive(false);
+        isSystemTextOpen = false;
     }
 
     public void ShowSystemText()
     {
+        Debug.Log("Error");
+        isSystemTextOpen = true;
+        instance.SystemText.enabled = true;
         StartCoroutine(ShowSystemTextCoRoutine());
     }
 
