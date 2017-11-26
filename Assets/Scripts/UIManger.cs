@@ -17,9 +17,17 @@ public class UIManger : ManagerBase<UIManger>
 	[SerializeField] Image HurtEffect;
 	[SerializeField] Image GameOverEffect;
 	[SerializeField] Image ChangeMapEffect;
+	[SerializeField] Image ArrawImage;
     [SerializeField] Text SystemText;
     static public bool isThrowUIOpen = false;
     static public bool isSystemTextOpen = false;
+
+	public void UpdateArraw()
+	{
+		Vector3 _euler = ArrawImage.transform.localEulerAngles;
+		_euler.z = -PlayerManager.instance.homeArrawRota;
+		ArrawImage.transform.localEulerAngles = _euler;
+	}
 
     public IEnumerator ShowSystemTextCoRoutine()
     {
