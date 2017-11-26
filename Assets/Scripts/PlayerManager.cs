@@ -70,14 +70,14 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		}
 		else
 		{
-			Debug.LogWarning("Attempt to drop yogurt with ni yogurt at all.");
+			Debug.LogWarning("Attempt to drop yogurt with no yogurt at all.");
 		}
 	}
 
 	public void YogurtDisappear()
 	{
 		instance.yogurtCount = 0;
-		yogurtInstance.transform.position = Vector3.right * -1f;
+		yogurtInstance.transform.position = Vector3.right * -9999f;
 	}
 
 	// Called Every Frame
@@ -305,7 +305,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	public static void UpdateAtStep()
 	{
 		// Check if Yogurt should automatically disppear after few steps
-		if(instance.yogurtInstance.transform.position.x != -1)
+		if(instance.yogurtInstance.transform.position.x != -9999)
 		{
 			if(instance.yogurtCount >= 5)
 			{
@@ -465,7 +465,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 			playerInstance.GetComponent<Animator>().Play("Armature|jump", -1, 0);
 
 			Vector3 _nextPos = instance.destination + instance.nextPosition;
-			bool isConflictWithYogurt = (yogurtInstance.transform.position.x != -1 && (yogurtInstance.transform.position - _nextPos).magnitude < 0.01f);
+			bool isConflictWithYogurt = (yogurtInstance.transform.position.x != -9999 && (yogurtInstance.transform.position - _nextPos).magnitude < 0.01f);
 			DungeonMapData _data = DungeonManager.GetMapData ((int)_nextPos.x, (int)_nextPos.z);
 
             if (_data.cubeData.canThrough && !isConflictWithYogurt)

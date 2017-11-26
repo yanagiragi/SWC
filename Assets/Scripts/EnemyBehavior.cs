@@ -202,7 +202,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
 
             Vector3 ActualDirection;
 
-            if(yogurtDirection.x != -1)
+            if(yogurtDirection.x != -9999)
             {
                 // Yogurt is Still Alive!
                 ActualDirection = yogurtDirection.normalized;
