@@ -485,6 +485,13 @@ public class PlayerManager : ManagerBase<PlayerManager> {
                     SlimeBehaviourManger.instance.WalkOnWater();
                 }
 
+                if (_data.cubeType == E_DUNGEON_CUBE_TYPE.TRAP)
+                {
+                    SlimeBehaviourManger.instance.GetNextStep(_data);
+
+                    SlimeBehaviourManger.instance.WalkOnTrap();
+                }
+
             } else if (_data.cubeType == E_DUNGEON_CUBE_TYPE.EARTH && slimeMode == Item.ItemType.acid)
             {
                 SlimeBehaviourManger.instance.GetNextStep(_data);
