@@ -128,7 +128,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
 
     void MilkIncreaseBlood()
     {
-        if (PlayerManager.instance.PlayerItemList[(int)Item.ItemType.milk] > 0)
+		if (PlayerManager.instance.slimeMode == Item.ItemType.milk)
         {
             if (milkCount % milkInterval == 0)
             {
@@ -139,7 +139,6 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
             if (milkCount >= milkInterval * milkUseLimit)
             {
                 Debug.Log("Lost Milk!");
-                PlayerManager.instance.PlayerItemList[(int)Item.ItemType.milk] = 0;
                 milkCount = 0;
                 PlayerManager.instance.SetSlimeMode(Item.ItemType.empty);
                 return;
@@ -267,7 +266,7 @@ DungeonManager.GetMapData(playerPosition + new Vector2(-1, 0)).cubeType == E_DUN
 
     void PutYogurt()
     {
-        if (PlayerManager.instance.PlayerItemList[(int)Item.ItemType.yogurt] > 0)
+		if (PlayerManager.instance.slimeMode == Item.ItemType.yogurt)
         {
             PlayerManager.instance.putYogurt();
         }

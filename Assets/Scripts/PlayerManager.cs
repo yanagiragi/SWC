@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerManager : ManagerBase<PlayerManager> {
 
-	[ReorderableList]
-	public List<int> PlayerItemList = new List<int>();
+//	[ReorderableList]
+//	public List<int> PlayerItemList = new List<int>();
 
 	[ReorderableList]
 	public List<Material> MaterialMap = new List<Material>();
@@ -40,11 +40,11 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		// enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
 
 		// Init PlayerItemList
-		instance.PlayerItemList.Clear();
-		for (int i = 0; i < 10; ++i)
-		{
-			instance.PlayerItemList.Add(0);
-		}
+//		instance.PlayerItemList.Clear();
+//		for (int i = 0; i < 10; ++i)
+//		{
+//			instance.PlayerItemList.Add(0);
+//		}
 
 		instance.destination = new Vector3 (DungeonManager.homePos.x, 0, DungeonManager.homePos.y);
 		instance.playerInstance.transform.position = instance.destination;
@@ -61,9 +61,9 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 	public void putYogurt()
 	{
-		if (PlayerItemList[(int)Item.ItemType.yogurt] > 0)
+//		if (PlayerItemList[(int)Item.ItemType.yogurt] > 0)
+		if (slimeMode == Item.ItemType.yogurt)
 		{
-			PlayerItemList[(int)Item.ItemType.yogurt] = 0;
 			yogurtInstance.transform.position = playerInstance.transform.position;
 			yogurtCount = 0;
 			SetSlimeMode(Item.ItemType.empty);
@@ -157,7 +157,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		switch (_item.fuseLevel) {
 		case 1:
 			if (Input.GetKeyDown (KeyCode.K)) {
-				PlayerManager.instance.PlayerItemList[(int)slimeMode] = 0;
 				SetSlimeMode (Item.ItemType.empty);
 			}
 
@@ -175,13 +174,13 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 			if (UIManger.isThrowUIOpen) {
 				if (Input.GetKeyDown (KeyCode.A)) {
-					DeFuse (slimeMode, subMode1);
+					DeFuse (subMode1);
 					isIdle = true;
 					UIManger.instance.CloseThrowUI ();
 				}
 
 				if (Input.GetKeyDown (KeyCode.D)) {
-					DeFuse (slimeMode, subMode2);
+					DeFuse (subMode2);
 					isIdle = true;
 					UIManger.instance.CloseThrowUI ();
 				}
@@ -194,6 +193,17 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	{
 		slimeMode = itemType;
 		Debug.Log ("SetSlimeMode : " + itemType.ToString());
+
+//		if (itemType == Item.ItemType.empty) {
+//			for (int f = (int)Item.ItemType.empty; f <= (int)Item.ItemType.poison; f++) {
+//				PlayerItemList[f] = 0;
+//			}
+//		} else {
+//			for (int f = (int)Item.ItemType.milk; f <= (int)Item.ItemType.poison; f++) {
+//				PlayerItemList[f] = 0;
+//			}
+//			PlayerItemList[(int)itemType] = 1;
+//		}
 
 		Item _item =  ItemManager.GetItemData (slimeMode);
 
@@ -236,12 +246,12 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 			return resultType;
 		}
 
-		bool item1AmmountIsZero = (PlayerItemList[(int)itemType1] <= 0);
-		bool item2AmmountIsZero = (PlayerItemList[(int)itemType2] <= 0);
-		if (item1AmmountIsZero || item2AmmountIsZero) {
-			Debug.LogWarning("Error occues when fusing : Bad amount");
-			return Item.ItemType.empty;
-		}
+//		bool item1AmmountIsZero = (PlayerItemList[(int)itemType1] <= 0);
+//		bool item2AmmountIsZero = (PlayerItemList[(int)itemType2] <= 0);
+//		if (item1AmmountIsZero || item2AmmountIsZero) {
+//			Debug.LogWarning("Error occues when fusing : Bad amount");
+//			return Item.ItemType.empty;
+//		}
 
 		if (item1CanFuse && item2CanFuse)
 		{
@@ -272,25 +282,19 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		if ((int)resultType > (int)Item.ItemType.poison) {
 			return false;
 		}else if (resultType != Item.ItemType.empty) {
-			PlayerItemList [(int)resultType] = 1;
-			PlayerItemList [(int)itemType1] = 0;
-			PlayerItemList [(int)itemType2] = 0;
 			SetSlimeMode (resultType);
 			return true;
 		}
 		return false;
 	}
 
-	public bool DeFuse(Item.ItemType FusedItemType, Item.ItemType dropItemType)
+	public bool DeFuse(Item.ItemType dropItemType)
 	{
 		bool isSuccess = false;
 
-		if (PlayerItemList[(int)FusedItemType] >= 0 && PlayerItemList[(int)dropItemType] == 0)
+		if (((int)slimeMode & (int)dropItemType) == (int)dropItemType)
 		{
-			Item.ItemType resultType = (Item.ItemType)((int)FusedItemType - (int)dropItemType);
-			PlayerItemList[(int)resultType] = 1;
-			PlayerItemList[(int)FusedItemType] = 0;
-			PlayerItemList[(int)dropItemType] = 0;
+			Item.ItemType resultType = (Item.ItemType)((int)slimeMode - (int)dropItemType);
 			SetSlimeMode (resultType);
 		}
 		else
@@ -526,15 +530,15 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		Item.ItemType _itemType = addItem.type;
 		if (_itemType == Item.ItemType.food1 || _itemType == Item.ItemType.food2 || _itemType == Item.ItemType.food3)
 		{
-			++PlayerItemList[(int)_itemType];
+//			++PlayerItemList[(int)_itemType];
 			result = true;
 			IncreaseFood (addItem.satiation);
 		}
 		else
 		{
-			if(PlayerItemList[(int)_itemType] == 0)
+//			if(PlayerItemList[(int)_itemType] == 0)
+			if(slimeMode != _itemType)
 			{
-				++PlayerItemList[(int)_itemType];
 				result = true;
 				if (slimeMode == Item.ItemType.empty) {
 					SetSlimeMode (_itemType);
@@ -548,17 +552,17 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		return result;
 	}
 
-	bool DropItem(Item.ItemType dropItemType)
-	{
-		bool result = false;
-
-		if (ItemManager.instance.ItemList[(int)dropItemType].canDrop && PlayerItemList[(int)dropItemType] > 0)
-		{
-			--PlayerItemList[(int)dropItemType];
-			result = true;
-		}
-
-		return result;
-	}
+//	bool DropItem(Item.ItemType dropItemType)
+//	{
+//		bool result = false;
+//
+//		if (ItemManager.instance.ItemList[(int)dropItemType].canDrop && PlayerItemList[(int)dropItemType] > 0)
+//		{
+//			--PlayerItemList[(int)dropItemType];
+//			result = true;
+//		}
+//
+//		return result;
+//	}
 
 }
