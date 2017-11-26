@@ -493,7 +493,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		rotationAngles = Vector3.zero;
 	}
 
-	Queue<KeyCode> keyQueue = new Queue<KeyCode>();
+	public Queue<KeyCode> keyQueue = new Queue<KeyCode>();
 
 	public void GetNextStepTranslate()
 	{        
