@@ -154,6 +154,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         if (nextStepData.cubeType == E_DUNGEON_CUBE_TYPE.EARTH)
         {
             Debug.Log("AcidMeltWall");
+			SoundManager.instance.do_acidDestroy ();
             DungeonManager.ChangeCubeType(nextStepData.pos, E_DUNGEON_CUBE_TYPE.NONE);
         }
     }
@@ -211,6 +212,7 @@ DungeonManager.GetMapData(playerPosition + new Vector2(-1, 0)).cubeType == E_DUN
                     PlayerManager.instance.destination += new Vector3(1, 0, 1);
                     PlayerManager.instance.Move();
                     abilityIsUse = true;
+					SoundManager.instance.do_teleport ();
                     return;
                 }
             }
@@ -224,6 +226,7 @@ DungeonManager.GetMapData(playerPosition + new Vector2(-1, 0)).cubeType == E_DUN
                     PlayerManager.instance.destination += new Vector3(-1, 0, 1);
                     PlayerManager.instance.Move();
                     abilityIsUse = true;
+					SoundManager.instance.do_teleport ();
                     return;
                 }
             }
@@ -239,6 +242,7 @@ DungeonManager.GetMapData(playerPosition + new Vector2(-1, 0)).cubeType == E_DUN
                     PlayerManager.instance.destination += new Vector3(1, 0, -1);
                     PlayerManager.instance.Move();
                     abilityIsUse = true;
+					SoundManager.instance.do_teleport ();
                     return;
                 }
             }
@@ -253,6 +257,7 @@ DungeonManager.GetMapData(playerPosition + new Vector2(-1, 0)).cubeType == E_DUN
                     PlayerManager.instance.destination += new Vector3(-1, 0, -1);
                     PlayerManager.instance.Move();
                     abilityIsUse = true;
+					SoundManager.instance.do_teleport ();
                     return;
                 }
             }
