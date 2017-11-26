@@ -151,6 +151,9 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	{
 		instance.food = Mathf.Max(instance.food + amount, 0);
 		UIManger.instance.UpdateFoodInfo ();
+
+		//DoSomething
+		SoundManager.instance.do_swallow();
 	}
 
 	public static void SetSatiation(float p_satiation)
