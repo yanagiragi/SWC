@@ -36,3 +36,5 @@
 * F2: ReLoad Map
 
 * 1,2,3,4,5,6: Select Slime Mode
+
+### 其餘細節晚點補上，需要睡眠ZZZ
