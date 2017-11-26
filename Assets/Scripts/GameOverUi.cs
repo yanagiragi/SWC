@@ -21,4 +21,12 @@ public class GameOverUi : MonoBehaviour {
 	public void GameOverDone(){
 		UIManger.GameOverDone ();
 	}
+
+	public void ChangeMap(){
+		GameOverManager.instance.ChangeMap ();
+	}
+
+	public void ChangeMapDone(){
+		UIManger.ChangeMapDone ();
+	}
 }
