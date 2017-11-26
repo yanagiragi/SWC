@@ -37,7 +37,7 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
             // For Debug
             if(i == 0)
             {
-                pos = new Vector3(52, 0, 52);
+                ;// pos = new Vector3(52, 0, 52);
             }
 
             GameObject m = Instantiate(monsterBasePrefab, pos , transform.rotation);
