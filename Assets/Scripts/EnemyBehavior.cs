@@ -28,6 +28,13 @@ public class EnemyBehavior : ManagerBase<EnemyBehavior>
 
     public void Init()
     {
+		int len = enemyList.Count;
+		for (int i = 0; i < len; i++) {
+			if (enemyList [i].monster) {
+				GameObject.Destroy (enemyList [i].monster);
+			}
+		}
+
         enemyList.Clear();
 
         for (int i = 0; i < EnemyAmount; i++)

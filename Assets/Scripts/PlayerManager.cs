@@ -52,6 +52,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 		instance.playerInstance.GetComponent<Animator> ().Play ("Idle");
 		GameOverManager.isGameOver = false;
+		CameraManager.instance.cmrAnimator.SetBool ("inHome", true);
 	}
 
 	static public void ChangeMap(){
@@ -91,6 +92,19 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	// Called Every Frame
 	private void Update()
 	{
+		if(Input.GetKeyDown(KeyCode.Alpha1)){
+			SetSlimeMode (Item.ItemType.milk);
+		}else if(Input.GetKeyDown(KeyCode.Alpha2)){
+			SetSlimeMode (Item.ItemType.oil);
+		}else if(Input.GetKeyDown(KeyCode.Alpha3)){
+			SetSlimeMode (Item.ItemType.acid);
+		}else if(Input.GetKeyDown(KeyCode.Alpha4)){
+			SetSlimeMode (Item.ItemType.butter);
+		}else if(Input.GetKeyDown(KeyCode.Alpha5)){
+			SetSlimeMode (Item.ItemType.yogurt);
+		}else if(Input.GetKeyDown(KeyCode.Alpha6)){
+			SetSlimeMode (Item.ItemType.poison);
+		}
 
 //		homeArrawRota
 		Vector3 _ray = new Vector3(DungeonManager.homePos.x, 0, DungeonManager.homePos.y) - destination;
@@ -462,7 +476,9 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 				UIManger.instance.ShowSystemText();
 				UIManger.StartChangeMap ();
 			}
+			CameraManager.instance.cmrAnimator.SetBool ("inHome", true);
 		} else {
+			CameraManager.instance.cmrAnimator.SetBool ("inHome", false);
 			IncreaseSatiation (-1f);
 		}
 		//		Fuse (slimeMode, _data.itemType);
