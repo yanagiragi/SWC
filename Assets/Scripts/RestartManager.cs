@@ -12,5 +12,6 @@ public class RestartManager : ManagerBase<RestartManager> {
 	static public void ReStart(){
 		DungeonManager.ReStart ();
 		PlayerManager.ReStart ();
+        StepManager.ReStart();
 	}
 }

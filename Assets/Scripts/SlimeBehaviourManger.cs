@@ -18,6 +18,7 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     public int milkUseLimit = 2; // Actually Can use milkUseLimit + 1 times, then lost
     public int milkInterval = 5;
     public int milkCount = 0;
+    public int trapMinusHealth = 5;
 
     bool abilityIsUse = false;
 
@@ -27,6 +28,10 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
     {
     }
 
+    public void WalkOnTrap()
+    {
+        PlayerManager.DecreaseHealth(trapMinusHealth);
+    }
 
     public void UpdateAtStep()
     {
