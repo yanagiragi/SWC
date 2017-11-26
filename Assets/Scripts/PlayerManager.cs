@@ -39,13 +39,6 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 		// enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
 
-		// Init PlayerItemList
-//		instance.PlayerItemList.Clear();
-//		for (int i = 0; i < 10; ++i)
-//		{
-//			instance.PlayerItemList.Add(0);
-//		}
-
 		instance.destination = new Vector3 (DungeonManager.homePos.x, 0, DungeonManager.homePos.y);
 		instance.playerInstance.transform.position = instance.destination;
 		instance.isIdle = true;
@@ -54,6 +47,19 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		SetHealth (100);
 		SetFood (0);
 		SetSatiation (1000);
+
+		instance.playerInstance.GetComponent<Animator> ().Play ("Idle");
+		GameOverManager.isGameOver = false;
+	}
+
+	static public void ChangeMap(){
+
+		// enum order: empty, milk, oil, butter, acid, yogurt, poison, food1, food2, food3
+
+		instance.isIdle = true;
+
+		instance.SetSlimeMode (Item.ItemType.empty);
+		SetHealth (100);
 
 		instance.playerInstance.GetComponent<Animator> ().Play ("Idle");
 		GameOverManager.isGameOver = false;
@@ -414,9 +420,11 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 		islerping = false;
 		if (_data.cubeType == E_DUNGEON_CUBE_TYPE.HOME) {
-			IncreaseSatiation (instance.food);
-			SetFood (0);
-
+			if (instance.food > 0) {
+				IncreaseSatiation (instance.food);
+				SetFood (0);
+				UIManger.StartChangeMap ();
+			}
 		} else {
 			IncreaseSatiation (-1f);
 		}
