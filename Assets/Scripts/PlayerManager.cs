@@ -10,6 +10,8 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	[ReorderableList]
 	public List<Material> MaterialMap = new List<Material>();
 
+	public float homeArrawRota = 0;
+
 	public float health = 100;
 	public float food = 0;
 	public float satiation = 1000;
@@ -89,6 +91,13 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	// Called Every Frame
 	private void Update()
 	{
+
+//		homeArrawRota
+		Vector3 _ray = new Vector3(DungeonManager.homePos.x, 0, DungeonManager.homePos.y) - destination;
+		Vector3 _euler = Quaternion.LookRotation (_ray).eulerAngles;
+		homeArrawRota = _euler.y;
+		UIManger.instance.UpdateArraw ();
+
 		if ((health <= 0) || (satiation <= 0))
 		{
 			if (!GameOverManager.isGameOver)
@@ -373,10 +382,10 @@ public class PlayerManager : ManagerBase<PlayerManager> {
         DungeonMapData data1 = DungeonManager.GetMapData(new Vector2(PlayerManager.instance.playerInstance.transform.position.x, PlayerManager.instance.playerInstance.transform.position.z));
         DungeonMapData data2 = DungeonManager.GetMapData(new Vector2(instance.destination.x, PlayerManager.instance.destination.z));
 
-        if (data1.cubeType != E_DUNGEON_CUBE_TYPE.HOME && data2.cubeType == E_DUNGEON_CUBE_TYPE.HOME && !UIManger.isSystemTextOpen)
-        {
-            UIManger.instance.ShowSystemText();
-        }
+//        if (data1.cubeType != E_DUNGEON_CUBE_TYPE.HOME && data2.cubeType == E_DUNGEON_CUBE_TYPE.HOME && !UIManger.isSystemTextOpen)
+//        {
+//            UIManger.instance.ShowSystemText();
+//        }
 
         if (condition == 1)
 		{
@@ -423,6 +432,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 			if (instance.food > 0) {
 				IncreaseSatiation (instance.food);
 				SetFood (0);
+				UIManger.instance.ShowSystemText();
 				UIManger.StartChangeMap ();
 			}
 		} else {

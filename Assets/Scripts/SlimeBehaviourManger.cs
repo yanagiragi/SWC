@@ -93,8 +93,10 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
         UpdatePlayerPositionRT();
         if (Input.GetKeyDown(KeyCode.J) && currentBehaviourType == Item.ItemType.yogurt)
         {
-            Debug.Log("Put Yogurt!");
-            PutYogurt();
+			if (PlayerManager.instance.isIdle) {
+				Debug.Log ("Put Yogurt!");
+				PutYogurt ();
+			}
         }
 
         if (currentBehaviourType == Item.ItemType.butter && isCoolDowm == false)
