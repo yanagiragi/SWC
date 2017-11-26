@@ -14,7 +14,8 @@ public class UIManger : ManagerBase<UIManger>
 	[SerializeField] Image ThrowImage1;
 	[SerializeField] Image ThrowImage2;
     [SerializeField] Image CoolDown;
-    [SerializeField] Image HurtEffect;
+	[SerializeField] Image HurtEffect;
+	[SerializeField] Image GameOverEffect;
     static public bool isThrowUIOpen = false;
 
     void Update()
@@ -107,4 +108,12 @@ public class UIManger : ManagerBase<UIManger>
     {
         CoolDown.fillAmount = value;
     }
+
+	public static void StartGameOver(){
+		instance.GameOverEffect.gameObject.SetActive (true);
+	}
+
+	public static void GameOverDone(){
+		instance.GameOverEffect.gameObject.SetActive (false);
+	}
 }

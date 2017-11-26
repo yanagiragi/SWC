@@ -6,12 +6,11 @@ public class GameOverManager : ManagerBase<GameOverManager> {
 
     public static bool isGameOver = false;
 
-	public static void GameOver()
+	public void GameOver()
     {
         Debug.Log("GameOver!");
-
-        // After All Done
-
-        // RestartManager.ReStart();
+		RestartManager.ReStart ();
     }
+
+
 }
