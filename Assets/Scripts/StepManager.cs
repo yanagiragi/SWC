@@ -25,5 +25,6 @@ public class StepManager : ManagerBase<StepManager> {
         EnemyBehavior.instance.UpdateAtStep();
         PlayerManager.UpdateAtStep();
         SlimeBehaviourManger.instance.UpdateAtStep();
+		SoundManager.instance.UpdateAtStep ();
     }
 }
