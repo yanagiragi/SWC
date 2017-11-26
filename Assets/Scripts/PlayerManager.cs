@@ -363,11 +363,38 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		return isConflict;
 	}
 
-	public void Move()
+    private bool checkHome()
+    {
+        bool isConflict = false;
+
+        if(
+            (destination.x == 48 && destination.z == 50) ||
+            (destination.x == 48 && destination.z == 51) ||
+            (destination.x == 49 && destination.z == 51) ||
+            (destination.x == 49 && destination.z == 52) ||
+            (destination.x == 49 && destination.z == 50) ||
+            (destination.x == 52 && destination.z == 51) ||
+            (destination.x == 52 && destination.z == 50)
+        )
+        {
+            isConflict = true;
+        }
+
+        return isConflict;
+    }
+
+
+    public void Move()
 	{
 		lastFramePos = playerInstance.transform.position;
 
-		int condition = checkConflict();
+        if (checkHome())
+        {
+            destination = playerInstance.transform.position;
+            return;
+        }
+
+        int condition = checkConflict();
 
         // Check Sys Text
         DungeonMapData data1 = DungeonManager.GetMapData(new Vector2(PlayerManager.instance.playerInstance.transform.position.x, PlayerManager.instance.playerInstance.transform.position.z));

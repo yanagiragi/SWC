@@ -33,5 +33,6 @@ public class StepManager : ManagerBase<StepManager> {
         PlayerManager.UpdateAtStep();
         SlimeBehaviourManger.instance.UpdateAtStep();
 		SoundManager.instance.UpdateAtStep ();
+        NPCManager.instance.UpdateAtStep();
     }
 }
