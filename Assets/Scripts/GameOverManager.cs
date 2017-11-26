@@ -12,5 +12,9 @@ public class GameOverManager : ManagerBase<GameOverManager> {
 		RestartManager.ReStart ();
     }
 
-
+	public void ChangeMap()
+	{
+		Debug.Log("ChangeMap!");
+		RestartManager.ChangeMap ();
+	}
 }

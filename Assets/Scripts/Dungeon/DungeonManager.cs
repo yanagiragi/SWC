@@ -402,6 +402,10 @@ public class DungeonManager : ManagerBase<DungeonManager> {
 		instance.InitDungeon ();
 		instance.GenerateObj ();
 	}
+	static public void ChangeMap(){
+		instance.InitDungeon ();
+		instance.GenerateObj ();
+	}
 	void Start () {
 	}
 

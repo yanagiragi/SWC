@@ -16,6 +16,7 @@ public class UIManger : ManagerBase<UIManger>
     [SerializeField] Image CoolDown;
 	[SerializeField] Image HurtEffect;
 	[SerializeField] Image GameOverEffect;
+	[SerializeField] Image ChangeMapEffect;
     [SerializeField] Text SystemText;
     static public bool isThrowUIOpen = false;
     static public bool isSystemTextOpen = false;
@@ -133,5 +134,13 @@ public class UIManger : ManagerBase<UIManger>
 
 	public static void GameOverDone(){
 		instance.GameOverEffect.gameObject.SetActive (false);
+	}
+
+	public static void StartChangeMap(){
+		instance.ChangeMapEffect.gameObject.SetActive (true);
+	}
+
+	public static void ChangeMapDone(){
+		instance.ChangeMapEffect.gameObject.SetActive (false);
 	}
 }

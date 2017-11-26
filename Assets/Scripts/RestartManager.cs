@@ -14,4 +14,9 @@ public class RestartManager : ManagerBase<RestartManager> {
 		PlayerManager.ReStart ();
         StepManager.ReStart();
 	}
+
+	static public void ChangeMap(){
+		DungeonManager.ChangeMap ();
+		PlayerManager.ChangeMap ();
+	}
 }
