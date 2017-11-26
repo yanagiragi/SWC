@@ -53,7 +53,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 		instance.SetSlimeMode (Item.ItemType.empty);
 		SetHealth (100);
 		SetFood (0);
-		UIManger.instance.UpdateSatiation ();
+		SetSatiation (1000);
 
 		instance.playerInstance.GetComponent<Animator> ().Play ("Idle");
 		GameOverManager.isGameOver = false;
@@ -83,7 +83,7 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 	// Called Every Frame
 	private void Update()
 	{
-		if (health <= 0)
+		if ((health <= 0) || (satiation <= 0))
 		{
 			if (!GameOverManager.isGameOver)
 			{
