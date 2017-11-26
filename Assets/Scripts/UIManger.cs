@@ -16,7 +16,20 @@ public class UIManger : ManagerBase<UIManger>
     [SerializeField] Image CoolDown;
 	[SerializeField] Image HurtEffect;
 	[SerializeField] Image GameOverEffect;
+    [SerializeField] Text SystemText;
     static public bool isThrowUIOpen = false;
+
+    public IEnumerator ShowSystemTextCoRoutine()
+    {
+        instance.SystemText.enabled = true;
+        yield return new WaitForSeconds(1f);
+        instance.SystemText.enabled = false;
+    }
+
+    public void ShowSystemText()
+    {
+        StartCoroutine(ShowSystemTextCoRoutine());
+    }
 
     void Update()
 	{
