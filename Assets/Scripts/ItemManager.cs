@@ -24,10 +24,7 @@ public class ItemManager : ManagerBase<ItemManager> {
     public static Item GetItemData(Item.ItemType type)
     {
         return ItemManager.instance.ItemList[(int)type];
-		if (ItemManager.instance.ItemList [(int)type] == item.food1 || item.food2 || item.food3) 
-		{
-			SoundManager.instance.do_swallow ();
-		}
+	
 	}
 
 }
