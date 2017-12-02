@@ -40,7 +40,7 @@ public class UIManger : ManagerBase<UIManger>
 
     public void ShowSystemText()
     {
-        Debug.Log("Error");
+        //Debug.Log("Error");
         isSystemTextOpen = true;
         instance.SystemText.enabled = true;
         StartCoroutine(ShowSystemTextCoRoutine());
@@ -146,11 +146,14 @@ public class UIManger : ManagerBase<UIManger>
 	}
 
 	public static void StartChangeMap(){
-		instance.ChangeMapEffect.gameObject.SetActive (true);
+        PlayerManager.instance.isIdle = false;
+        PlayerManager.instance.keyQueue.Clear();
+        instance.ChangeMapEffect.gameObject.SetActive (true);
 	}
 
 	public static void ChangeMapDone(){
 		instance.ChangeMapEffect.gameObject.SetActive (false);
+        PlayerManager.instance.isIdle = true;
 	}
 
 	public void UpdateStepText()

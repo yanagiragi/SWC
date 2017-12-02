@@ -174,7 +174,8 @@ public class SlimeBehaviourManger : ManagerBase<SlimeBehaviourManger>
             if (currentBehaviourType != Item.ItemType.oil)
             {
                 PlayerManager.DecreaseHealth(WaterDamage);
-                Debug.Log(PlayerManager.instance.health);
+                
+                // Debug.Log(PlayerManager.instance.health);
             }
         }
     }
@@ -283,7 +284,7 @@ DungeonManager.GetMapData(playerPosition + new Vector2(-1, 0)).cubeType == E_DUN
 
     public void GetNextStep(DungeonMapData getNextStepData)
     {
-        Debug.Log(getNextStepData);
+        // Debug.Log(getNextStepData);
         nextStepData = getNextStepData;
     }
 

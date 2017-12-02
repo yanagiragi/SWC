@@ -108,7 +108,16 @@ public class PlayerManager : ManagerBase<PlayerManager> {
 
 //		homeArrawRota
 		Vector3 _ray = new Vector3(DungeonManager.homePos.x, 0, DungeonManager.homePos.y) - destination;
-		Vector3 _euler = Quaternion.LookRotation (_ray).eulerAngles;
+        Vector3 _euler = Vector3.zero;
+        if (_ray != Vector3.zero)
+        {
+            _euler = Quaternion.LookRotation(_ray).eulerAngles;
+        }
+        else
+        {
+            // Since we initlaize to zero, no need to re-assign
+            // _euler = Vector3.zero;
+        }
 		homeArrawRota = _euler.y;
 		UIManger.instance.UpdateArraw ();
 
