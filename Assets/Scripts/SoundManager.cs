@@ -5,18 +5,12 @@ using UnityEngine;
 public class SoundManager: ManagerBase<SoundManager> 
 {
 
-	public AudioClip water,slimestep,acidDestroy,swallow,teleport,fire,goblinatk;
-	private AudioSource audiosource;
+	public AudioClip water,slimestep,acidDestroy,swallow,teleport,fire;
+	public AudioSource audiosource;
 	private GameObject Slime;
-
-	void Start()
-	{
-		audiosource = GetComponent<AudioSource> ();
-	}
 
 	public void UpdateAtStep()
 	{
-		//Debug.Log("text");
 		Vector3 _pos3 = PlayerManager.instance.playerInstance.transform.position;
 		Vector2 _pos = new Vector2 (_pos3.x, _pos3.z);
 		DungeonMapData _data = DungeonManager.GetMapData (_pos);
@@ -34,25 +28,20 @@ public class SoundManager: ManagerBase<SoundManager>
 		{
 			audiosource.PlayOneShot(fire,1f);
 		}
-
-
 	}
+
 	public void do_acidDestroy()//player action
 	{
-		
-			audiosource.PlayOneShot (acidDestroy, 1f);
-		
+		audiosource.PlayOneShot (acidDestroy, 1f);
 	}
+
 	public void do_teleport()//player action
 	{
 		audiosource.PlayOneShot (teleport, 1f);
 	}
+
 	public void do_swallow()//monster action
 	{
 		audiosource.PlayOneShot (swallow, 1f);
-	}
-	public void do_goblinatk()//monster action
-	{
-		
 	}
 }

@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
 
+    public GameObject BGM;
+
 	// Use this for initialization
 	void Start () {
-		
+        DontDestroyOnLoad(BGM);
 	}
 	
 	// Update is called once per frame
@@ -20,7 +22,8 @@ public class MainMenu : MonoBehaviour {
 
 	public void EnterGame()
 	{
-        SceneManager.LoadScene("Main");
+        //SceneManager.LoadScene("Main");
+        SceneManager.LoadSceneAsync("Main");
     }
 
 	public void ExitGame()
