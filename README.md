@@ -2,7 +2,11 @@
 
 ### Made by SWC
 
-!(預留空間)[預留]
+![畫面1](Imgs/1.png)
+
+![畫面2](Imgs/2.png)
+
+![畫面3](Imgs/3.png)
 
 ### 操作
 
@@ -36,5 +40,3 @@
 * F2: ReLoad Map
 
 * 1,2,3,4,5,6: Select Slime Mode
-
-### 其餘細節晚點補上，需要睡眠ZZZ
